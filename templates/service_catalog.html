@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<button onclick="window.history.back()" class="btn-back"
+    style="margin-bottom: 20px; background: transparent; color: var(--text-secondary); border: none; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 0;">
+    <i class="fa-solid fa-arrow-left"></i> Go Back
+</button>
+
+<div class="user-welcome" style="margin-bottom: 2rem;">
+    <h1>{{ service }} Movies</h1>
+    <p>Browsing catalog</p>
+</div>
+
+<div class="section-title">
+    <h2>Movies on {{ service }}</h2>
+</div>
+
+{% if movies %}
+<div class="movie-grid">
+    {% for movie in movies %}
+    <a href="{{ url_for('movie_details', title=movie.title) }}" class="movie-card-link">
+        <div class="movie-card">
+            {% if movie.poster and movie.poster != 'N/A' %}
+            <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="movie-poster">
+            {% else %}
+            <div class="movie-poster"
+                style="background: #333; display: flex; align-items: center; justify-content: center; color: #777;">
+                <span>No Poster</span>
+            </div>
+            {% endif %}
+            <div class="movie-info">
+                <div class="movie-meta">
+                    <span>{{ movie.year }}</span>
+                    <span><i class="fa-solid fa-star" style="color: gold;"></i> {{ movie.rating }}</span>
+                </div>
+                <h3>{{ movie.title }}</h3>
+                <div class="movie-genre">{{ movie.genre }}</div>
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+</div>
+
+<div class="pagination" style="margin-top: 30px; display: flex; justify-content: center; gap: 20px;">
+    {% if page_num > 1 %}
+    <a href="{{ url_for('service_catalog', service_name=service_slug, page=page_num-1) }}" class="auth-btn"
+        style="width: auto; padding: 10px 20px;">Previous</a>
+    {% endif %}
+
+    <span style="color: var(--text-secondary); align-self: center;">Page {{ page_num }} of {{ total_pages }}</span>
+
+    {% if page_num < total_pages %} <a
+        href="{{ url_for('service_catalog', service_name=service_slug, page=page_num+1) }}" class="auth-btn"
+        style="width: auto; padding: 10px 20px;">Next</a>
+        {% endif %}
+</div>
+
+{% else %}
+<div class="empty-state">
+    <i class="fa-solid fa-film"></i>
+    <h3>No movies found</h3>
+    <p>Unable to load catalog for {{ service }}</p>
+</div>
+{% endif %}
+
+<style>
+    /* Ensure pagination buttons match the theme */
+    .auth-btn {
+        background: var(--primary-color, #e50914);
+        color: white;
+        border: none;
+        border-radius: 4px;
+        font-weight: 500;
+        text-decoration: none;
+        transition: background 0.3s;
+    }
+
+    .auth-btn:hover {
+        background: #b20710;
+    }
+</style>
+{% endblock %}

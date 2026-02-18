@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="login-card">
+        <div class="text-center" style="margin-bottom: 2rem;">
+            <h1>Security Check</h1>
+            <p style="color: var(--text-secondary);">Please answer your security question.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="alert alert-{{ category }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form action="{{ url_for('verify_security_question', username=user.username) }}" method="POST">
+            <div class="form-group">
+                <label>Security Question</label>
+                <div class="question-box"
+                    style="padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 1rem;">
+                    {{ user.security_question }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="security_answer">Answer</label>
+                <input type="text" id="security_answer" name="security_answer" class="login-input"
+                    placeholder="Your answer" required>
+            </div>
+
+            <button type="submit" class="btn-primary" style="width: 100%; margin-top: 1rem;">Verify Answer</button>
+
+            <div class="text-center" style="margin-top: 1rem;">
+                <a href="{{ url_for('forgot_password') }}" class="forgot-link">Not you? Try a different username</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

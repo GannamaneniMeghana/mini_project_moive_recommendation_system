@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CineMatrix - AI Movie Recommendations</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    {% block head %}{% endblock %}
+</head>
+
+<body class="{{ 'dark-mode' if user_settings and user_settings.dark_mode == 'true' else '' }}">
+    <div class="app-container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <img src="{{ url_for('static', filename='images/CineMatrix_Logo.png.png') }}" alt="CineMatrix"
+                    style="height: 40px; width: auto; margin-right: 0.5rem;">
+                <span>CineMatrix</span>
+            </div>
+
+            <ul class="nav-links">
+                <li class="nav-section-title">Menu</li>
+                <li class="nav-item">
+                    <a href="{{ url_for('home') }}" class="nav-link {{ 'active' if page == 'home' else '' }}">
+                        <i class="fa-solid fa-compass"></i>
+                        <span>Discovery</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('top_rated') }}" class="nav-link {{ 'active' if page == 'top_rated' else '' }}">
+                        <i class="fa-solid fa-star"></i>
+                        <span>Top Rated</span>
+                    </a>
+                </li>
+
+
+
+
+                <li class="nav-section-title">Library</li>
+                {% if not user_settings or user_settings.watchlist_enabled == 'true' %}
+                <li class="nav-item">
+                    <a href="{{ url_for('watchlist') }}" class="nav-link {{ 'active' if page == 'watchlist' else '' }}">
+                        <i class="fa-regular fa-bookmark"></i>
+                        <span>Watchlist</span>
+                    </a>
+                </li>
+                {% endif %}
+                {% if not user_settings or user_settings.favorites_enabled == 'true' %}
+                <li class="nav-item">
+                    <a href="{{ url_for('favorites') }}" class="nav-link {{ 'active' if page == 'favorites' else '' }}">
+                        <i class="fa-solid fa-heart"></i>
+                        <span>Favorites</span>
+                    </a>
+                </li>
+                {% endif %}
+
+                <li class="nav-section-title">General</li>
+                <li class="nav-item">
+                    <a href="{{ url_for('settings') }}" class="nav-link {{ 'active' if page == 'settings' else '' }}">
+                        <i class="fa-solid fa-gear"></i>
+                        <span>Settings</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ url_for('logout') }}" class="nav-link">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                        <span>Log Out</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <button class="mobile-menu-btn" onclick="toggleSidebar()" aria-label="Toggle Menu">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+                <div class="mobile-logo">
+                    <img src="{{ url_for('static', filename='images/CineMatrix_Logo.png.png') }}" alt="CineMatrix">
+                    <span>CineMatrix</span>
+                </div>
+                <div class="create-nav">
+                    <a href="#" class="active">Movies</a>
+                    <a href="{{ url_for('attributes') }}">Attributes</a>
+                    <a href="{{ url_for('services') }}">Services</a>
+                </div>
+
+                <form action="{{ url_for('search') }}" method="POST" class="search-bar">
+                    <i class="fa-solid fa-magnifying-glass" style="color: #666;"></i>
+                    <input type="text" name="query" id="search-input" placeholder="Search movies, services, genres..."
+                        required>
+                    <button type="button" onclick="startVoiceSearch()" class="voice-btn" title="Search by Voice">
+                        <i class="fa-solid fa-microphone"></i>
+                    </button>
+                </form>
+
+                <div class="user-actions">
+                    <button onclick="openCalculator()" class="btn-primary">
+                        CALCULATE MY CINEMATRIX
+                    </button>
+                </div>
+            </header>
+
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- CineMatrix Calculator Modal -->
+    <div id="calculatorModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeCalculator()"><i class="fa-solid fa-xmark"></i></button>
+
+            <div id="calc-step-1" class="calc-step active">
+                <h2>Design Your Experience</h2>
+                <p class="step-desc">Tell us a bit about your context to find the perfect movie.</p>
+
+                <form id="cinematrix-form" onsubmit="calculateMovies(event)">
+                    <!-- Question 1: Time -->
+                    <div class="calc-group">
+                        <label><i class="fa-regular fa-clock"></i> How much time do you have?</label>
+                        <div class="options-grid">
+                            <input type="radio" name="time" id="time-short" value="short" required checked>
+                            <label class="option-card" for="time-short">
+                                <span>Quick</span>
+                                <small>&lt; 90 mins</small>
+                            </label>
+
+                            <input type="radio" name="time" id="time-medium" value="medium">
+                            <label class="option-card" for="time-medium">
+                                <span>Standard</span>
+                                <small>90-120 mins</small>
+                            </label>
+
+                            <input type="radio" name="time" id="time-long" value="long">
+                            <label class="option-card" for="time-long">
+                                <span>Epic</span>
+                                <small>2+ Hours</small>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Question 2: Mood -->
+                    <div class="calc-group">
+                        <label><i class="fa-regular fa-face-smile"></i> What is your mood?</label>
+                        <div class="options-grid scroll-x">
+                            <input type="radio" name="mood" id="mood-happy" value="happy" required checked>
+                            <label class="option-card" for="mood-happy">Happy</label>
+
+                            <input type="radio" name="mood" id="mood-emotional" value="emotional">
+                            <label class="option-card" for="mood-emotional">Emotional</label>
+
+                            <input type="radio" name="mood" id="mood-thrilled" value="thrilled">
+                            <label class="option-card" for="mood-thrilled">Thrilled</label>
+
+                            <input type="radio" name="mood" id="mood-relaxed" value="relaxed">
+                            <label class="option-card" for="mood-relaxed">Relaxed</label>
+
+                            <input type="radio" name="mood" id="mood-intense" value="intense">
+                            <label class="option-card" for="mood-intense">Intense</label>
+                        </div>
+                    </div>
+
+                    <!-- Question 3: Who -->
+                    <div class="calc-group">
+                        <label><i class="fa-solid fa-user-group"></i> Who are you watching with?</label>
+                        <div class="options-grid">
+                            <input type="radio" name="who" id="who-alone" value="alone" required checked>
+                            <label class="option-card" for="who-alone">Myself</label>
+
+                            <input type="radio" name="who" id="who-date" value="date">
+                            <label class="option-card" for="who-date">Date</label>
+
+                            <input type="radio" name="who" id="who-friends" value="friends">
+                            <label class="option-card" for="who-friends">Friends</label>
+
+                            <input type="radio" name="who" id="who-family" value="family">
+                            <label class="option-card" for="who-family">Family</label>
+                        </div>
+                    </div>
+
+                    <!-- Question 4: Energy -->
+                    <div class="calc-group">
+                        <label><i class="fa-solid fa-bolt"></i> What is your energy level?</label>
+                        <div class="options-grid">
+                            <input type="radio" name="energy" id="energy-high" value="high" required checked>
+                            <label class="option-card" for="energy-high">High</label>
+
+                            <input type="radio" name="energy" id="energy-med" value="medium">
+                            <label class="option-card" for="energy-med">Medium</label>
+
+                            <input type="radio" name="energy" id="energy-low" value="low">
+                            <label class="option-card" for="energy-low">Low</label>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn-primary full-width" style="margin-top: 2rem;">
+                        CALCULATE MATCHES
+                    </button>
+                </form>
+            </div>
+
+            <!-- Results View (Hidden by default) -->
+            <div id="calc-results" class="calc-step">
+                <h2 style="text-align: center; margin-bottom: 1.5rem;">Your Perfect Match</h2>
+                <div id="results-container" class="results-grid"
+                    style="grid-template-columns: 1fr; max-width: 600px; margin: 0 auto;">
+                    <!-- Movie injected here -->
+                </div>
+
+                <!-- AI Explanation Section -->
+                <div id="ai-explanation"
+                    style="background: rgba(255,255,255,0.05); padding: 1.5rem; border-radius: 12px; margin-top: 1.5rem; border: 1px solid var(--border-color);">
+                    <h3 style="color: var(--accent-color); font-size: 1.1rem; margin-bottom: 0.5rem;">
+                        <i class="fa-solid fa-robot"></i> Why this movie?
+                    </h3>
+                    <ul id="typewriter-text"
+                        style="list-style: none; padding: 0; color: var(--text-secondary); line-height: 1.6;">
+                        <!-- Typing text here -->
+                    </ul>
+                </div>
+
+                <button class="btn-secondary full-width" onclick="resetCalculator()" style="margin-top: 1.5rem;">
+                    Try Again
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openCalculator() {
+            document.getElementById('calculatorModal').classList.add('active');
+        }
+
+        function closeCalculator() {
+            document.getElementById('calculatorModal').classList.remove('active');
+            setTimeout(resetCalculator, 300);
+        }
+
+        function resetCalculator() {
+            document.getElementById('calc-step-1').style.display = 'block';
+            document.getElementById('calc-results').style.display = 'none';
+            document.getElementById('results-container').innerHTML = '';
+            document.getElementById('typewriter-text').innerHTML = '';
+            document.getElementById('cinematrix-form').reset();
+        }
+
+        function calculateMovies(e) {
+            e.preventDefault();
+            const form = e.target;
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            // Show loading state
+            const btn = form.querySelector('button[type="submit"]');
+            const originalText = btn.innerText;
+            btn.innerText = 'Analyzing...';
+            btn.disabled = true;
+
+            fetch('/calculate_cinematrix', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(movies => {
+                    const container = document.getElementById('results-container');
+                    container.innerHTML = '';
+                    const explanationList = document.getElementById('typewriter-text');
+                    explanationList.innerHTML = '';
+
+                    if (movies.length === 0) {
+                        container.innerHTML = '<p style="text-align: center;">No exact matches found, try adjusting your filters!</p>';
+                    } else {
+                        // We expect a single movie now or list of 1
+                        const movie = movies[0];
+
+                        const html = `
+                        <div class="movie-card result-card" style="display: flex; flex-direction: row; height: auto;">
+                            <div class="poster-container" style="width: 150px; flex-shrink: 0;">
+                                <img src="${movie.poster || 'https://via.placeholder.com/300x450'}" alt="${movie.title}" style="height: 225px; object-fit: cover;">
+                            </div>
+                            <div class="movie-info" style="padding: 1.5rem; display: flex; flex-direction: column; justify-content: center;">
+                                <h3 class="movie-title" style="font-size: 1.5rem;">${movie.title}</h3>
+                                <div class="movie-meta" style="margin: 1rem 0;">
+                                    <span style="background: var(--accent-color); color: white; padding: 2px 8px; border-radius: 4px;">${movie.match_score}% Match</span>
+                                    <div class="rating-badge"><i class="fa-solid fa-star"></i> ${movie.rating}</div>
+                                </div>
+                                <a href="/movie/${encodeURIComponent(movie.title)}" class="btn-play">View Details</a>
+                            </div>
+                        </div>
+                        `;
+                        container.innerHTML = html;
+
+                        // Start Typing Effect for Explanation
+                        if (movie.explanation && movie.explanation.length > 0) {
+                            typeWriterEffect(explanationList, movie.explanation);
+                        }
+                    }
+
+                    // Switch views
+                    document.getElementById('calc-step-1').style.display = 'none';
+                    document.getElementById('calc-results').style.display = 'block';
+                })
+                .catch(err => {
+                    alert('Something went wrong!');
+                    console.error(err);
+                })
+                .finally(() => {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                });
+        }
+
+        function typeWriterEffect(container, points) {
+            let pIndex = 0;
+
+            function typeNextPoint() {
+                if (pIndex < points.length) {
+                    const li = document.createElement('li');
+                    li.innerHTML = '<i class="fa-solid fa-check" style="color: #4ade80; margin-right: 8px;"></i> ';
+                    container.appendChild(li);
+
+                    const text = points[pIndex];
+                    let charIndex = 0;
+
+                    const interval = setInterval(() => {
+                        if (charIndex < text.length) {
+                            li.innerHTML += text.charAt(charIndex);
+                            charIndex++;
+                        } else {
+                            clearInterval(interval);
+                            pIndex++;
+                            setTimeout(typeNextPoint, 300); // Pause before next line
+                        }
+                    }, 30); // Typing speed
+                }
+            }
+
+            typeNextPoint();
+        }
+
+        // Basic active state toggling for sidebar
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function () {
+                document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        function toggleSidebar() {
+            document.querySelector('.sidebar').classList.toggle('active');
+            document.querySelector('.modal-overlay').classList.remove('active'); // Close modal if open (optional)
+        }
+
+        function startVoiceSearch() {
+            if (!('webkitSpeechRecognition' in window)) {
+                alert("Voice search is not supported in this browser. Please use Chrome.");
+                return;
+            }
+
+            const recognition = new webkitSpeechRecognition();
+            recognition.lang = 'en-US';
+            recognition.start();
+
+            const btn = document.querySelector('.voice-btn i');
+            const originalColor = btn.style.color;
+            btn.style.color = 'var(--accent-color)'; // Visual feedback
+
+            recognition.onresult = function (event) {
+                const transcript = event.results[0][0].transcript;
+                document.getElementById('search-input').value = transcript;
+                document.querySelector('.search-bar').submit();
+            };
+
+            recognition.onerror = function (event) {
+                console.error("Speech recognition error", event.error);
+                // alert("Voice search failed: " + event.error); // Optional
+            };
+
+            recognition.onend = function () {
+                btn.style.color = originalColor; // Reset
+            };
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,169 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <!-- Search Section -->
+    {% if page == "search" %}
+    <div style="margin-bottom: 2rem;">
+        <h2 style="color: var(--accent-color); font-size: 1.5rem;">Search Results for "{{ search_query }}"</h2>
+    </div>
+    {% else %}
+
+    <!-- Filter Bar -->
+    <form action="{{ url_for('home') }}" method="GET" class="filter-bar">
+        <span class="filter-label">Filters <i class="fa-solid fa-sliders"></i></span>
+
+        <select class="filter-dropdown" name="genre">
+            <option value="">Genre</option>
+            <option value="Action" {% if request.args.get('genre')=='Action' %}selected{% endif %}>Action</option>
+            <option value="Drama" {% if request.args.get('genre')=='Drama' %}selected{% endif %}>Drama</option>
+            <option value="Romance" {% if request.args.get('genre')=='Romance' %}selected{% endif %}>Romance</option>
+            <option value="Thriller" {% if request.args.get('genre')=='Thriller' %}selected{% endif %}>Thriller</option>
+            <option value="Comedy" {% if request.args.get('genre')=='Comedy' %}selected{% endif %}>Comedy</option>
+            <option value="Horror" {% if request.args.get('genre')=='Horror' %}selected{% endif %}>Horror</option>
+            <option value="Sci-Fi" {% if request.args.get('genre')=='Sci-Fi' %}selected{% endif %}>Sci-Fi</option>
+            <option value="Fantasy" {% if request.args.get('genre')=='Fantasy' %}selected{% endif %}>Fantasy</option>
+            <option value="Animation" {% if request.args.get('genre')=='Animation' %}selected{% endif %}>Animation
+            </option>
+            <option value="Biography" {% if request.args.get('genre')=='Biography' %}selected{% endif %}>Biography
+            </option>
+        </select>
+
+        <select class="filter-dropdown" name="language">
+            <option value="">Language</option>
+            <option value="English" {% if request.args.get('language')=='English' %}selected{% endif %}>English</option>
+            <option value="Hindi" {% if request.args.get('language')=='Hindi' %}selected{% endif %}>Hindi</option>
+            <option value="Telugu" {% if request.args.get('language')=='Telugu' %}selected{% endif %}>Telugu</option>
+            <option value="Tamil" {% if request.args.get('language')=='Tamil' %}selected{% endif %}>Tamil</option>
+            <option value="Malayalam" {% if request.args.get('language')=='Malayalam' %}selected{% endif %}>Malayalam
+            </option>
+            <option value="Kannada" {% if request.args.get('language')=='Kannada' %}selected{% endif %}>Kannada</option>
+            <option value="Korean" {% if request.args.get('language')=='Korean' %}selected{% endif %}>Korean</option>
+        </select>
+
+        <select class="filter-dropdown" name="rating">
+            <option value="">Rating</option>
+            <option value="5-6" {% if request.args.get('rating')=='5-6' %}selected{% endif %}>⭐ 5–6</option>
+            <option value="6-7" {% if request.args.get('rating')=='6-7' %}selected{% endif %}>⭐ 6–7</option>
+            <option value="7-8" {% if request.args.get('rating')=='7-8' %}selected{% endif %}>⭐ 7–8</option>
+            <option value="8+" {% if request.args.get('rating')=='8+' %}selected{% endif %}>⭐ 8+</option>
+        </select>
+
+        <button type="submit" class="btn-apply">Apply</button>
+        <a href="{{ url_for('home') }}" class="btn-clear text-center"
+            style="display:flex; align-items:center;">Clear</a>
+    </form>
+
+    <div style="margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center;">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            {% if page == "search" or page == "attributes" %}
+            <button onclick="window.history.back()" class="btn-back"
+                style="background: transparent; color: var(--text-secondary); border: none; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 0;">
+                <i class="fa-solid fa-arrow-left"></i> Back
+            </button>
+            {% endif %}
+
+            <h2 class="section-heading" style="margin: 0;">
+                {% if page == "home" %}
+                Trending Now
+                {% elif page == "top_rated" %}
+                Top Rated Movies
+                {% elif page == "search" %}
+                Search Results for "{{ search_query }}"
+                {% elif page == "attributes" %}
+                {{ search_query }}
+                {% endif %}
+            </h2>
+        </div>
+
+        {% if page == "home" %}
+        <a href="{{ url_for('top_rated') }}"
+            style="color: var(--accent-color); font-weight: 600; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;">
+            Show All <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+    <!-- Movie Grid -->
+    <div class="movie-grid">
+        {% if movies %}
+        {% for movie in movies %}
+        <div class="movie-card">
+            <div class="poster-container">
+                {% if movie.poster %}
+                <img src="{{ movie.poster }}" alt="{{ movie.title }}"
+                    onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
+                {% else %}
+                <img src="https://via.placeholder.com/300x450?text=No+Poster" alt="{{ movie.title }}">
+                {% endif %}
+            </div>
+            <div class="movie-info">
+                <h3 class="movie-title">{{ movie.title }}</h3>
+                <div class="movie-meta">
+                    <span>{{ movie.genre.split(',')[0] if movie.genre else 'N/A' }}</span>
+                    <div class="rating-badge">
+                        <i class="fa-solid fa-star"></i> {{ movie.rating }}/10
+                    </div>
+                </div>
+                <div class="card-actions">
+                    <a href="{{ url_for('movie_details', title=movie.title) }}" class="btn-play">
+                        <i class="fa-solid fa-play"></i> Details
+                    </a>
+                    <button class="btn-icon" onclick="toggleFavorite('{{ movie.title }}', this)"
+                        title="Add to Favorites">
+                        <i class="{{ 'fa-solid' if movie.title in user_favorites else 'fa-regular' }} fa-heart"
+                            style="color: {{ '#ef4444' if movie.title in user_favorites else '' }};"></i>
+                    </button>
+                    <button class="btn-icon" onclick="toggleWatchlist('{{ movie.title }}')" title="Add to Watchlist">
+                        <i class="fa-regular fa-bookmark"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+            <p style="color: var(--text-secondary); font-size: 1.1rem;">No movies found</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    function toggleWatchlist(title) {
+        fetch('/watchlist/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: title })
+        }).then(res => res.json()).then(data => {
+            // alert('Added to watchlist!');
+            // Silent success
+        });
+    }
+
+    function toggleFavorite(title, btn) {
+        fetch('/favorites/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: title })
+        })
+            .then(response => response.json())
+            .then(data => {
+                const icon = btn.querySelector('i');
+                if (data.action === 'added') {
+                    icon.classList.remove('fa-regular');
+                    icon.classList.add('fa-solid');
+                    icon.style.color = '#ef4444';
+                    // Optional: alert('Added to Favorites');
+                } else {
+                    icon.classList.remove('fa-solid');
+                    icon.classList.add('fa-regular');
+                    icon.style.color = '';
+                    // Optional: alert('Removed from Favorites');
+                }
+            })
+            .catch(err => console.error(err));
+    }
+</script>
+{% endblock %}

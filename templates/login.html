@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CineMatrix</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="bg-image"></div>
+
+    <div class="login-overlay"></div>
+    <div class="auth-container">
+        <div class="login-card">
+            <div class="text-center" style="margin-bottom: 2rem;">
+                <img src="{{ url_for('static', filename='images/CineMatrix_Logo.png.png') }}" alt="CineMatrix"
+                    style="max-width: 150px; height: auto;">
+            </div>
+            <h1>Sign In</h1>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+            {% for category, message in messages %}
+            <div class="alert alert-{{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+
+            <form action="{{ url_for('login') }}" method="POST">
+                <div class="form-group">
+                    <input type="text" id="username" name="username" class="login-input"
+                        placeholder="Email or mobile number" required>
+                </div>
+
+                <div class="form-group">
+                    <input type="password" id="password" name="password" class="login-input" placeholder="Password"
+                        required>
+                </div>
+
+                <button type="submit" class="btn-netflix">Sign In</button>
+
+                <div class="auth-divider">OR</div>
+
+                <a href="{{ url_for('social_login', provider='google') }}" class="btn-google"
+                    style="text-decoration: none;">
+                    <i class="fa-brands fa-google"></i> Continue with Google
+                </a>
+
+
+
+
+
+
+
+                <div class="signup-prompt">
+                    New to CineMatrix? <a href="{{ url_for('register') }}">Sign up now.</a>
+                </div>
+
+                <div class="text-center" style="margin-top: 1rem;">
+                    <a href="{{ url_for('logo') }}" class="forgot-link"><i class="fa-solid fa-arrow-left"></i> Back to
+                        Home</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

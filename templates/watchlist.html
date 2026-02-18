@@ -1,0 +1,170 @@
+{% extends "base.html" %}
+
+{% block content %}
+<button onclick="window.history.back()" class="btn-back"
+    style="margin-bottom: 20px; background: transparent; color: var(--text-secondary); border: none; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 0;">
+    <i class="fa-solid fa-arrow-left"></i> Go Back
+</button>
+<div class="user-welcome" style="margin-bottom: 2rem;">
+    <h1>Your Watchlist</h1>
+    <p>Movies you want to watch</p>
+    {% if movies %}
+    <div style="margin-top: 15px;">
+        <a href="{{ url_for('clear_watchlist_action') }}" class="btn-danger-outline"
+            onclick="return confirm('Are you sure you want to clear your entire watchlist? This cannot be undone.');"
+            style="padding: 8px 16px; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-trash"></i> Clear Watchlist
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- View Section -->
+<div class="view-section active">
+
+    <!-- Subscription Optimizer -->
+    {% if optimization and optimization.total_watchlist_count > 0 %}
+    <div class="optimizer-panel"
+        style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(168, 85, 247, 0.1) 100%); border-radius: 16px; padding: 25px; margin-bottom: 30px; border: 1px solid rgba(255, 255, 255, 0.1);">
+
+        <div style="margin-bottom: 20px;">
+            <h2 style="color: #fff; font-size: 1.5rem; margin-bottom: 5px;">Smart Subscription Bundle</h2>
+            <p style="color: #ccc;">Based on your watchlist of <strong>{{ optimization.total_watchlist_count }}</strong>
+                movies.</p>
+        </div>
+
+        <div style="display: flex; gap: 30px; flex-wrap: wrap;">
+
+            <!-- Recommended Bundle -->
+            <div style="flex: 1; min-width: 300px;">
+                <h3
+                    style="color: #818cf8; margin-bottom: 15px; font-size: 1.1rem; text-transform: uppercase; letter-spacing: 1px;">
+                    Recommended Plan</h3>
+
+                {% if optimization.bundle %}
+                <div
+                    style="background: rgba(255,255,255,0.05); border-radius: 12px; padding: 20px; border: 1px solid rgba(129, 140, 248, 0.3);">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 20px;">
+                        <div>
+                            <div style="font-size: 2rem; font-weight: 700; color: #fff;">${{
+                                "%.2f"|format(optimization.total_cost) }}<span
+                                    style="font-size: 1rem; color: #aaa; font-weight: 400;">/mo</span></div>
+                            <div style="color: #4ade80; font-size: 0.9rem; margin-top: 5px;">
+                                <i class="fa-solid fa-check-circle"></i> Covers {{ optimization.coverage_pct }}% of
+                                movies
+                            </div>
+                        </div>
+                        <div style="text-align: right;">
+                            <div
+                                style="background: rgba(129, 140, 248, 0.2); color: #818cf8; padding: 5px 10px; border-radius: 6px; font-size: 0.9rem; display: inline-block;">
+                                {{ optimization.bundle|length }} Subscriptions
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bundle-list" style="display: flex; flex-direction: column; gap: 10px;">
+                        {% for item in optimization.bundle %}
+                        <div
+                            style="display: flex; align-items: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px;">
+                            <div style="flex: 1; font-weight: 500; color: white;">{{ item.service }}</div>
+                            <div style="color: #ccc; font-size: 0.9rem; margin-right: 15px;">${{ item.price }}</div>
+                            <div style="font-size: 0.8rem; color: #aaa;">+{{ item.newly_covered }} unique</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% else %}
+                <div style="padding: 20px; background: rgba(255,255,255,0.05); border-radius: 12px; color: #ccc;">
+                    No optimization possible (movies not found on tracking services).
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Detailed Breakdown -->
+            <div style="flex: 1; min-width: 300px;">
+                <h3 style="color: #aaa; margin-bottom: 15px; font-size: 1rem; text-transform: uppercase;">Unpacking the
+                    Value</h3>
+
+                <div style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <span style="color: #ccc;">Movies Covered:</span>
+                        <div style="float: right; color: white; font-weight: bold;">{{ optimization.coverable_count }} /
+                            {{ optimization.total_watchlist_count }}</div>
+                        <div style="width: 100%; height: 4px; background: #333; margin-top: 8px; border-radius: 2px;">
+                            <div
+                                style="width: {{ optimization.coverage_pct }}%; height: 100%; background: #4ade80; border-radius: 2px;">
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if optimization.individual %}
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: #ddd; font-size: 0.9rem; margin-bottom: 10px;">Individual Performance</h4>
+                        <div style="display: grid; grid-template-columns: 1fr auto; gap: 8px; font-size: 0.9rem;">
+                            {% for item in optimization.individual[:3] %}
+                            <div style="color: #aaa;">{{ item.service }}</div>
+                            <div style="color: #fff;">{{ item.count }} movies</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div
+                        style="margin-top: 20px; font-size: 0.85rem; color: #888; font-style: italic; line-height: 1.4;">
+                        <i class="fa-solid fa-lightbulb" style="color: #fbbf24;"></i>
+                        Smart Tip: Rotate your subscriptions! Start with the first service in the bundle, watch its
+                        exclusive movies, then switch to the next service.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="movie-grid">
+        {% if movies %}
+        {% for movie in movies %}
+        <div class="movie-card-wrapper" style="position: relative;">
+            <a href="{{ url_for('movie_details', title=movie.title) }}" class="movie-card-link">
+                <div class="movie-card">
+                    <img src="{{ movie.poster }}" class="movie-poster" alt="{{ movie.title }}">
+                    <div class="movie-info">
+                        <h3>{{ movie.title }}</h3>
+                        <div class="movie-meta">
+                            <span>{{ movie.language }}</span>
+                            <span><i class="fa-solid fa-star" style="color: gold;"></i> {{ movie.rating
+                                }}</span>
+                        </div>
+                        {% if movie.user_review %}
+                        <div class="user-review-container">
+                            <p class="user-review-text">"{{ movie.user_review }}"</p>
+                            <div style="margin-top: 5px;">
+                                <span class="sentiment-badge-small"
+                                    style="background: {{ '#4ade8020' if movie.review_sentiment == 'positive' else '#f8717120' }}; color: {{ '#4ade80' if movie.review_sentiment == 'positive' else '#f87171' }};">
+                                    {{ movie.review_sentiment }}
+                                </span>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+            <form action="{{ url_for('remove_from_watchlist') }}" method="POST"
+                style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+                <input type="hidden" name="title" value="{{ movie.title }}">
+                <input type="hidden" name="origin" value="watchlist">
+                <button type="submit" class="fav-btn active"
+                    style="border: none; cursor: pointer; background: rgba(0,0,0,0.6); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;"><i
+                        class="fa-solid fa-bookmark" style="color: var(--accent-color);"></i></button>
+            </form>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty-state" style="width: 100%; text-align: center; padding: 4rem;">
+            <p style="color: var(--text-secondary);">No movies in watchlist yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

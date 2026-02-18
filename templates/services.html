@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block content %}
+<button onclick="window.history.back()" class="btn-back"
+    style="margin-bottom: 20px; background: transparent; color: var(--text-secondary); border: none; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 0;">
+    <i class="fa-solid fa-arrow-left"></i> Go Back
+</button>
+
+<div class="user-welcome" style="margin-bottom: 2rem;">
+    <h1>Services</h1>
+    <p>Browse movies by streaming service</p>
+</div>
+
+<div class="services-section">
+    <div class="two-card-grid">
+        <a href="{{ url_for('service_catalog', service_name='netflix') }}" class="big-service-card"
+            style="background-image: url('{{ url_for('static', filename='services/netflix.jpg') }}');">
+            <span>Netflix</span>
+        </a>
+        <a href="{{ url_for('service_catalog', service_name='amazon_prime') }}" class="big-service-card"
+            style="background-image: url('{{ url_for('static', filename='services/prime.jpg') }}');">
+            <span>Prime Video</span>
+        </a>
+        <a href="{{ url_for('service_catalog', service_name='hulu') }}" class="big-service-card"
+            style="background-image: url('{{ url_for('static', filename='services/hulu.jpg') }}');">
+            <span>Hulu</span>
+        </a>
+        <a href="{{ url_for('service_catalog', service_name='disney_plus') }}" class="big-service-card"
+            style="background-image: url('{{ url_for('static', filename='services/disney.jpg') }}');">
+            <span>Disney+</span>
+        </a>
+        <a href="{{ url_for('service_catalog', service_name='max') }}" class="big-service-card"
+            style="background-image: url('{{ url_for('static', filename='services/max.jpg') }}');">
+            <span>Max</span>
+        </a>
+        <a href="{{ url_for('service_catalog', service_name='peacock') }}" class="big-service-card"
+            style="background-image: url('{{ url_for('static', filename='services/peacock.jpg') }}');">
+            <span>Peacock Premium</span>
+        </a>
+        <a href="{{ url_for('service_catalog', service_name='paramount') }}" class="big-service-card"
+            style="background-image: url('{{ url_for('static', filename='services/paramount.jpg') }}');">
+            <span>Paramount+</span>
+        </a>
+        <a href="{{ url_for('service_catalog', service_name='appletv') }}" class="big-service-card"
+            style="background-image: url('{{ url_for('static', filename='services/apple.jpg') }}');">
+            <span>Apple TV+</span>
+        </a>
+    </div>
+</div>
+
+<style>
+    .two-card-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .big-service-card {
+        height: 180px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        font-size: 1.2rem;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+    .big-service-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        transition: background 0.3s;
+    }
+
+    .big-service-card:hover::before {
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    .big-service-card:hover {
+        transform: scale(1.05);
+    }
+
+    .big-service-card span {
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+</style>
+{% endblock %}

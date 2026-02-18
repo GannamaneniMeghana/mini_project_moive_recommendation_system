@@ -1,0 +1,198 @@
+Movie Name,Rating(10),Genre,Language,Description
+Bahubali,6.4,Drama|Romance,kannada;telugu,A drama drama featuring excellent performances and emotional depth.
+RRR,6.5,Family,hindi;telugu,"An exciting family movie blending action, emotion, and music."
+KGF Chapter 1,8.1,Romance,telugu,KGF Chapter 1 is an engaging romance film appreciated for its strong storyline.
+KGF Chapter 2,6.8,Romance,telugu,"An exciting romance movie blending action, emotion, and music."
+Vikram,8.5,Fantasy,bengali;telugu,A fantasy drama featuring excellent performances and emotional depth.
+Leo,8.1,Musical,telugu,A musical drama featuring excellent performances and emotional depth.
+Jawan,7.5,Fantasy|Adventure,kannada;telugu,A fantasy drama featuring excellent performances and emotional depth.
+Pathaan,9.4,Fantasy,marathi,Pathaan is an engaging fantasy film appreciated for its strong storyline.
+Animal,7.3,Romance,telugu,A commercial romance entertainer with powerful scenes and visuals.
+3 Idiots,6.9,Action|Comedy,telugu,A critically acclaimed action known for direction and cinematography.
+Dangal,6.4,Mythology,bengali,Dangal is an engaging mythology film appreciated for its strong storyline.
+PK,7.0,Mythology,marathi,"An exciting mythology movie blending action, emotion, and music."
+Gully Boy,8.5,Fantasy,telugu,A fantasy drama featuring excellent performances and emotional depth.
+Kantara,7.0,Biography|Drama,hindi,A biography drama featuring excellent performances and emotional depth.
+Sita Ramam,7.3,Comedy,punjabi,A commercial comedy entertainer with powerful scenes and visuals.
+Kurup,7.3,Crime,malayalam,A commercial crime entertainer with powerful scenes and visuals.
+Minnal Murali,9.3,Fantasy|Adventure,hindi,"An exciting fantasy movie blending action, emotion, and music."
+Sarkar,6.6,Drama|Romance,malayalam,A drama drama featuring excellent performances and emotional depth.
+Master,7.3,Musical,malayalam,A commercial musical entertainer with powerful scenes and visuals.
+Pushpa,8.7,Biography|Drama,malayalam,Pushpa is an engaging biography film appreciated for its strong storyline.
+Drishyam,7.4,Sport,hindi,A sport drama featuring excellent performances and emotional depth.
+Drishyam 2,9.1,Action|Drama,marathi,A action drama featuring excellent performances and emotional depth.
+Vikram Vedha,7.7,Drama|Romance,punjabi,A drama drama featuring excellent performances and emotional depth.
+Asuran,6.5,Adventure,kannada,"An exciting adventure movie blending action, emotion, and music."
+Tanhaji,9.1,Sci-Fi,bengali,A commercial sci-fi entertainer with powerful scenes and visuals.
+War,9.5,Family,tamil,"An exciting family movie blending action, emotion, and music."
+Kabir Singh,6.3,History,telugu,Kabir Singh is an engaging history film appreciated for its strong storyline.
+Arjun Reddy,8.2,Thriller,telugu,"An exciting thriller movie blending action, emotion, and music."
+Super Deluxe,7.3,Romance,punjabi,"An exciting romance movie blending action, emotion, and music."
+Ratsasan,9.4,Adventure,telugu,Ratsasan is an engaging adventure film appreciated for its strong storyline.
+Ala Vaikunthapurramuloo,9.1,Crime|Thriller,telugu,A commercial crime entertainer with powerful scenes and visuals.
+Maharshi,7.0,Comedy,tamil,A critically acclaimed comedy known for direction and cinematography.
+Rangasthalam,9.3,Action,kannada,"An exciting action movie blending action, emotion, and music."
+Manikarnika,6.6,Biography|Drama,hindi,A commercial biography entertainer with powerful scenes and visuals.
+Sanju,7.8,Drama|Romance,malayalam,A drama drama featuring excellent performances and emotional depth.
+Padmaavat,8.7,Mystery,telugu,"An exciting mystery movie blending action, emotion, and music."
+RRR Hindi,7.7,Sport,hindi,A commercial sport entertainer with powerful scenes and visuals.
+Robot 2.0,6.8,Biography,malayalam,"An exciting biography movie blending action, emotion, and music."
+Baahubali 2 Hindi,6.3,Romance,punjabi,Baahubali 2 Hindi is an engaging romance film appreciated for its strong storyline.
+KGF Hindi,7.9,Biography|Drama,tamil,A biography drama featuring excellent performances and emotional depth.
+Charlie 777,7.7,Crime|Thriller,tamil,A commercial crime entertainer with powerful scenes and visuals.
+Jersey,9.1,Animation,bengali,A animation drama featuring excellent performances and emotional depth.
+Kumbalangi Nights,8.6,Mythology,malayalam,A commercial mythology entertainer with powerful scenes and visuals.
+Karnan,9.5,Horror,marathi,A critically acclaimed horror known for direction and cinematography.
+Super 30,7.6,Animation,malayalam,A animation drama featuring excellent performances and emotional depth.
+Lagaan,7.2,Romance,malayalam,"An exciting romance movie blending action, emotion, and music."
+Swades,6.0,Family,telugu,A family drama featuring excellent performances and emotional depth.
+Queen,9.2,Romance,marathi,Queen is an engaging romance film appreciated for its strong storyline.
+Kahaani,6.8,Animation,punjabi,A animation drama featuring excellent performances and emotional depth.
+Andhadhun,6.5,Mythology,punjabi,A mythology drama featuring excellent performances and emotional depth.
+Drishyam Hindi,8.8,History,malayalam,Drishyam Hindi is an engaging history film appreciated for its strong storyline.
+PS1,8.3,Comedy,marathi,A critically acclaimed comedy known for direction and cinematography.
+PS2,7.6,Sci-Fi,telugu,PS2 is an engaging sci-fi film appreciated for its strong storyline.
+Kaithi,7.4,Drama,marathi,Kaithi is an engaging drama film appreciated for its strong storyline.
+Vada Chennai,6.7,Family,punjabi,A family drama featuring excellent performances and emotional depth.
+Kabzaa,6.6,Sci-Fi,punjabi,A sci-fi drama featuring excellent performances and emotional depth.
+The Shawshank Redemption,9.7,Drama,English,A powerful drama about hope and friendship inside a prison.
+The Godfather,9.6,Crime,English,"A gripping story of a mafia family’s loyalty, power, and betrayal."
+The Dark Knight,9.5,Action,English,A dark and thrilling superhero story featuring Gotham’s fight against chaos.
+Inception,9.2,Sci-Fi,English,A mind-bending sci-fi thriller exploring dreams within dreams.
+Fight Club,9.1,Drama,English,"A gritty story exploring identity, rebellion, and underground fight culture."
+Forrest Gump,8.9,Drama,English,A heartwarming story of a man who touches history in unexpected ways.
+Interstellar,9.0,Sci-Fi,English,A breathtaking journey through space searching for humanity’s new home.
+Gladiator,8.8,Action,English,A Roman general seeks revenge after being betrayed and exiled.
+The Matrix,9.1,Sci-Fi,English,A hacker uncovers the astonishing truth about reality and machines.
+Titanic,8.8,Romance,English,A tragic romance unfolds aboard the ill-fated RMS Titanic.
+Avatar,8.7,Fantasy,English,A visually stunning tale of humans encountering the alien world Pandora.
+Avengers: Endgame,8.9,Action,English,Heroes unite for a final battle to reverse the catastrophic blip.
+The Avengers,8.4,Action,English,Earth’s mightiest heroes assemble to stop an alien invasion.
+Jurassic Park,8.7,Sci-Fi,English,A thrilling adventure where dinosaurs are brought back to life.
+The Lion King,8.8,Animation,English,A young lion prince must reclaim his rightful place as king.
+Toy Story,8.3,Animation,English,Toys secretly come to life and embark on heartfelt adventures.
+Finding Nemo,8.4,Animation,English,A clownfish crosses the ocean to rescue his lost son.
+Up,8.5,Animation,English,A widower flies his house to South America seeking adventure.
+Coco,8.6,Animation,English,A young musician enters the Land of the Dead searching for his past.
+Monsters Inc,8.1,Animation,English,Two monsters uncover a conspiracy in the world of children's screams.
+The Conjuring,7.8,Horror,English,Paranormal investigators help a family facing dark supernatural forces.
+Insidious,7.4,Horror,English,A family battles sinister entities lurking in the astral plane.
+Annabelle,6.8,Horror,English,A haunted doll unleashes terror on a young family.
+Hereditary,8.1,Horror,English,A family uncovers terrifying secrets following a tragic loss.
+The Exorcist,8.4,Horror,English,"A young girl is possessed, prompting a desperate attempt at exorcism."
+The Nun,6.5,Horror,English,A priest investigates a demon lurking inside a Romanian abbey.
+It,7.4,Horror,English,Children face a terrifying shape-shifting clown in their town.
+It Chapter Two,6.8,Horror,English,Adults return to confront the evil clown Pennywise.
+Parasite,8.9,Thriller,Korean,A poor family infiltrates a wealthy household with shocking results.
+Train to Busan,8.4,Thriller,Korean,Passengers fight to survive a zombie outbreak on a train.
+Oldboy,8.3,Thriller,Korean,A man seeks revenge after being imprisoned mysteriously for 15 years.
+Snowpiercer,7.9,Action,English,Humanity survives on a perpetual train after a global freeze.
+The Raid,8.1,Action,Indonesian,An elite team fights through a crime-filled high-rise.
+Mad Max: Fury Road,8.6,Action,English,A wild chase across the desert in a post-apocalyptic world.
+John Wick,8.5,Action,English,A retired assassin seeks vengeance after losing everything.
+John Wick 2,8.1,Action,English,John Wick returns to honor a blood oath from his past.
+John Wick 3,7.9,Action,English,John fights the world’s top killers after being excommunicated.
+Django Unchained,8.5,Western,English,A freed slave teams with a bounty hunter to rescue his wife.
+Pulp Fiction,8.9,Crime,English,"Intersecting stories of crime, chaos, and dark humor in LA."
+Kill Bill Vol 1,8.1,Action,English,A former assassin seeks revenge against her deadly squad.
+Kill Bill Vol 2,8.0,Action,English,The Bride continues her quest for vengeance against Bill.
+The Irishman,8.2,Crime,English,A hitman recounts his life in organized crime.
+The Wolf of Wall Street,8.2,Drama,English,A stockbroker rises and falls in a world of excess.
+Shutter Island,8.2,Thriller,English,A detective investigates a psychiatric hospital on a remote island.
+Gone Girl,8.1,Thriller,English,A man becomes the prime suspect in his wife’s disappearance.
+The Social Network,7.8,Drama,English,The rise of Facebook leads to conflict and betrayal.
+Whiplash,8.5,Drama,English,A young drummer pushes his limits under a ruthless instructor.
+La La Land,8.0,Romance,English,A musician and an actress pursue dreams that pull them apart.
+The Notebook,7.9,Romance,English,A heartfelt tale of love and memories across decades.
+A Star Is Born,7.8,Drama,English,An aging musician mentors a rising singer as their bond grows.
+Moonlight,7.9,Drama,English,"A boy grows up navigating identity, hardship, and love."
+Joker,8.4,Crime,English,An isolated man descends into madness spawning a violent uprising.
+The Batman,8.1,Action,English,Batman uncovers a web of corruption tied to a serial killer.
+Man of Steel,7.5,Action,English,Superman grapples with alien identity and heroic destiny.
+Iron Man,8.2,Action,English,A billionaire builds a high-tech suit to become Iron Man.
+Iron Man 2,7.1,Action,English,Threats emerge as Stark faces both corporate and military rivals.
+Iron Man 3,7.3,Action,English,Tony Stark confronts PTSD and a dangerous new enemy.
+Captain America: Civil War,9.8,Action,English,The Avengers split after a political dispute sparks conflict.
+Captain America: The Winter Soldier,9.0,Action,English,Steve Rogers uncovers a conspiracy inside S.H.I.E.L.D.
+Black Panther,8.3,Action,English,The king of Wakanda defends his nation from internal threats.
+Doctor Strange,9.8,Fantasy,English,A surgeon explores mystical dimensions after a tragic accident.
+Spider-Man: Homecoming,7.6,Action,English,Peter Parker balances teenage life and hero duties.
+Spider-Man: No Way Home,8.3,Action,English,Multiverse chaos erupts as past villains return.
+The Amazing Spider-Man,7.0,Action,English,Peter uncovers secrets about his parents and powers.
+The Amazing Spider-Man 2,6.9,Action,English,Spider-Man faces Electro and personal loss.
+Logan,8.1,Action,English,Wolverine protects a young mutant in his final journey.
+Deadpool,8.0,Action,English,A mercenary with dark humor becomes an unconventional hero.
+Deadpool 2,7.8,Action,English,Deadpool forms a team to protect a young mutant.
+X-Men,7.4,Action,English,Mutants struggle for coexistence in a human world.
+X2,7.6,Action,English,Mutants face a threat that endangers both sides.
+X-Men: Days of Future Past,8.0,Action,English,Mutants send Wolverine back in time to prevent extinction.
+The Hunger Games,7.2,Action,English,A brave girl volunteers for a deadly televised competition.
+The Hunger Games: Catching Fire,7.5,Action,English,Katniss becomes a symbol of rebellion.
+The Hunger Games: Mockingjay Part 1,6.8,Action,English,Katniss leads a revolution against the Capitol.
+The Hunger Games: Mockingjay Part 2,6.5,Action,English,The rebellion reaches its final and most dangerous stage.
+Dune,8.1,Sci-Fi,English,A young heir becomes leader in a desert planet’s struggle.
+Inception,8.8,"Sci-Fi, Thriller",English,A thief enters dreams to steal secrets but faces a deadly mission.
+The Dark Knight,9.0,"Action, Crime",English,"Batman faces the Joker, who brings chaos to Gotham City."
+Interstellar,8.6,"Sci-Fi, Adventure",English,A team travels through a wormhole to save humanity.]
+Titanic,7.9,"Romance, Drama",English,A rich girl and a poor artist fall in love on the doomed ship.]
+Avatar,7.8,"Sci-Fi, Adventure",English,A marine joins aliens on Pandora and fights for their survival.]
+The Avengers,8.0,"Action, Sci-Fi",English,Earth's heroes unite to stop Loki and his alien army.]
+Joker,8.4,"Crime, Drama",English,A failed comedian becomes the infamous criminal Joker.]
+The Shawshank Redemption,9.3,Drama,English,A banker wrongly imprisoned forms a deep friendship in jail.]
+Forrest Gump,8.8,"Drama, Romance",English,A slow-witted man lives an extraordinary life through decades.]
+The Matrix,8.7,"Sci-Fi, Action",English,A hacker discovers the truth about the simulated reality.]
+Gladiator,8.5,"Action, Drama",English,A betrayed general seeks revenge as a gladiator.]
+Frozen,7.4,"Animation, Family",English,"Two sisters navigate love, fear, and magic in a winter kingdom."
+Finding Nemo,8.1,"Animation, Adventure",English,A clownfish searches the ocean for his missing son.
+Toy Story,8.3,"Animation, Comedy",English,Toys come to life and navigate friendship and jealousy.
+The Lion King,8.5,"Animation, Drama",English,A young lion must reclaim his kingdom from his uncle.
+Avengers: Endgame,8.4,"Action, Sci-Fi",English,Heroes unite to reverse Thanos' devastating snap.
+Avengers: Infinity War,8.4,"Action, Sci-Fi",English,The Avengers battle Thanos to stop universal destruction.
+La La Land,8.0,"Romance, Musical",English,An actress and a musician pursue dreams and love in LA.
+The Conjuring,7.5,"Horror, Thriller",English,Paranormal investigators help a family haunted by spirits.
+IT,7.3,"Horror, Thriller",English,Kids face an ancient evil clown terrorizing their town.
+The Prestige,8.5,"Drama, Mystery",English,Rival magicians battle through obsession and deception.
+Dune,8.0,"Sci-Fi, Adventure",English,A gifted young man must protect his desert planet from war.
+Mad Max: Fury Road,8.1,"Action, Adventure",English,A survivor helps rebels escape a tyrant in a desert wasteland.
+Deadpool,8.0,"Action, Comedy",English,A mercenary becomes a wise-cracking anti-hero.
+Black Panther,7.3,"Action, Adventure",English,The king of Wakanda faces a powerful challenger.
+Shutter Island,8.2,"Thriller, Mystery",English,A detective investigates a missing patient on a remote island.
+The Social Network,7.7,"Drama, Biography",English,The creation of Facebook leads to conflicts and lawsuits.
+Iron Man,7.9,"Action, Sci-Fi",English,A billionaire builds a high-tech suit to fight evil.
+Doctor Strange,7.5,"Action, Fantasy",English,A surgeon seeks mystical training after a life-changing accident.
+John Wick,7.4,"Action, Thriller",English,A retired hitman seeks revenge for his dog’s death.
+Jawan,7.5,Action|Thriller,Hindi,A high-octane action thriller centered on justice and social reform.
+Pathaan,7.0,Action|Spy,Hindi,A spy action film following an exiled agent protecting the nation.
+Animal,7.3,Crime|Drama,Hindi,A dark psychological drama exploring toxic masculinity and obsession.
+Dunki,7.1,Comedy|Drama,Hindi,A social drama about illegal immigration with humor and emotion.
+Fighter,7.4,Action|Patriotic,Hindi,An aerial action film focusing on Indian Air Force pilots.
+RRR,8.2,Action|Drama,Telugu,A fictional historical epic about revolution and friendship.
+Salaar,7.8,Action|Thriller,Telugu,A violent underworld drama about power and loyalty.
+Kalki 2898 AD,8.1,Sci-Fi|Mythology,Telugu,A futuristic sci-fi epic inspired by Indian mythology.
+Sita Ramam,8.0,Romance|Drama,Telugu,A poetic love story set against a war backdrop.
+Hi Nanna,7.9,Drama|Family,Telugu,A heartfelt emotional drama about love and parenthood.
+Leo,7.6,Action|Thriller,Tamil,A café owner’s past resurfaces in a violent drug cartel conflict.
+Jailer,7.9,Action|Drama,Tamil,A retired jailer takes revenge against criminals.
+Vikram,8.3,Action|Thriller,Tamil,A covert operations thriller with espionage and action.
+Maaveeran,7.5,Action|Fantasy,Tamil,A reluctant hero gains supernatural courage.
+Ponnyin Selvan 2,7.8,Historical|Drama,Tamil,A continuation of the Chola dynasty political saga.
+Kantara,8.3,Drama|Mythology,Kannada,A folklore-based story blending tradition and justice.
+Sapta Sagaradaache Ello,8.1,Romance|Drama,Kannada,A deeply emotional romantic drama.
+Charlie 777,8.8,Drama|Adventure,Kannada,A man’s life transforms after bonding with a dog.
+Bagheera,7.2,Action|Thriller,Kannada,A vigilante crime thriller inspired by justice.
+Hostel Hudugaru Bekagiddare,8.0,Comedy|Drama,Kannada,A hilarious college-based drama.
+Manjummel Boys,8.7,Survival|Thriller,Malayalam,A survival drama based on a real-life cave rescue.
+Aavesham,8.2,Action|Comedy,Malayalam,A gangster comedy with stylish storytelling.
+Premalu,8.1,Romance|Comedy,Malayalam,A light-hearted romantic entertainer.
+Bramayugam,8.0,Horror|Drama,Malayalam,A black-and-white folklore horror film.
+2018,8.4,Disaster|Drama,Malayalam,A gripping story based on Kerala floods.
+Oppenheimer,8.9,Biography|Drama,English,A biographical drama about the creator of the atomic bomb.
+Dune Part Two,8.8,Sci-Fi|Adventure,English,A continuation of the epic battle for Arrakis.
+The Batman,8.0,Action|Crime,English,A dark reboot of Batman investigating Gotham’s corruption.
+John Wick Chapter 4,8.3,Action|Thriller,English,An assassin faces global enemies in a final showdown.
+Barbie,7.8,Fantasy|Comedy,English,A satirical fantasy exploring identity and society.
+Parasite,8.6,Thriller|Drama,Korean,A dark satire on class divide and survival.
+Train to Busan 2,6.9,Horror|Action,Korean,A post-apocalyptic zombie survival sequel.
+Decision to Leave,7.5,Romance|Thriller,Korean,A detective becomes emotionally entangled in a mystery.
+The Night Owl,7.8,Historical|Thriller,Korean,A palace conspiracy thriller.
+Concrete Utopia,7.6,Disaster|Drama,Korean,A survival drama after a massive earthquake.

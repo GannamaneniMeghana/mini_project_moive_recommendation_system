@@ -1,0 +1,422 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="movie-details-container">
+    <button onclick="window.history.back()" class="btn-back"
+        style="margin-bottom: 20px; background: transparent; color: var(--text-secondary); border: none; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 0;">
+        <i class="fa-solid fa-arrow-left"></i> Go Back
+    </button>
+    <div class="movie-header">
+        <div class="poster-wrapper">
+            {% if movie.poster %}
+            <img src="{{ movie.poster }}" alt="{{ movie.title }}" class="movie-poster"
+                onerror="this.src='https://via.placeholder.com/400x600?text=No+Poster'">
+            {% else %}
+            <img src="https://via.placeholder.com/400x600?text=No+Poster" alt="{{ movie.title }}" class="movie-poster">
+            {% endif %}
+        </div>
+
+        <div class="movie-header-info">
+            <h1 class="movie-title-large">{{ movie.title }}</h1>
+
+            <div class="movie-meta-details">
+                <span><strong>Genre:</strong> {{ movie.genre }}</span>
+                <span><strong>Language:</strong> {{ movie.language }}</span>
+                <span><strong>Rating:</strong> <i class="fa-solid fa-star"></i> {{ movie.rating }}/10</span>
+            </div>
+
+            <p class="movie-description">{{ movie.description }}</p>
+
+            {% if watch_options %}
+            <div class="watch-options">
+                <h3>Where to Watch:</h3>
+                <div class="services-list">
+                    {% for service in watch_options %}
+                    <span class="service-badge">{{ service }}</span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="action-buttons">
+                <button class="btn-primary" onclick="toggleWatchlist('{{ movie.title }}')">
+                    <i class="fa-solid fa-plus"></i> Add to Watchlist
+                </button>
+                {% if is_in_watchlist %}
+                <button class="btn-secondary" onclick="removeFromWatchlist('{{ movie.title }}')">
+                    <i class="fa-solid fa-check"></i> In Watchlist
+                </button>
+                {% endif %}
+                <button class="btn-secondary" onclick="toggleFavorite('{{ movie.title }}', this)">
+                    <i class="{{ 'fa-solid' if movie.title in user_favorites else 'fa-regular' }} fa-heart"
+                        style="color: {{ '#ef4444' if movie.title in user_favorites else '' }};"></i> Favorite
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Trailer Section -->
+    <div class="trailer-section">
+        <h2>Official Trailer</h2>
+        {% if trailer_id %}
+        <iframe width="100%" height="315" src="https://www.youtube.com/embed/{{ trailer_id }}" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>
+        </iframe>
+        {% else %}
+        <iframe width="100%" height="315"
+            src="https://www.youtube.com/embed?listType=search&list={{ movie.title|urlencode }}+official+trailer"
+            frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+        {% endif %}
+        <div style="margin-top: 15px; text-align: center;">
+            <a href="https://www.youtube.com/results?search_query={{ movie.title|urlencode }}+official+trailer"
+                target="_blank" class="btn-secondary"
+                style="display: inline-flex; align-items: center; gap: 10px; text-decoration: none;">
+                <i class="fa-brands fa-youtube" style="color: #ff0000;"></i> Watch on YouTube
+            </a>
+        </div>
+    </div>
+
+    <!-- Reviews Section -->
+    <div class="reviews-section">
+        <h2>Reviews & Recommendations</h2>
+
+        <!-- Add Review Form -->
+        <div class="review-form">
+            <h3>Write a Review</h3>
+            <textarea id="reviewText" placeholder="Share your thoughts about this movie..." rows="4"></textarea>
+            <button onclick="submitReview('{{ movie.title }}')">Submit Review</button>
+        </div>
+
+        <!-- Recent Reviews -->
+        {% if reviews %}
+        <div class="reviews-list">
+            <h3>Recent Reviews</h3>
+            {% for review in reviews %}
+            <div class="review-card">
+                <div class="review-header">
+                    <span class="review-date">{{ review.date }}</span>
+                    <span class="review-sentiment"
+                        style="background: {% if review.sentiment == 'positive' %}#4ade80{% else %}#ef4444{% endif %};">
+                        {{ review.sentiment|upper }}
+                    </span>
+                </div>
+                <p class="review-text">{{ review.review }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Recommendations Section -->
+    {% if recommendations %}
+    <div class="recommendations-section">
+        <h2>Similar Movies You Might Like</h2>
+        <div class="movie-grid">
+            {% for rec in recommendations %}
+            <div class="movie-card">
+                <div class="poster-container">
+                    {% if rec.poster %}
+                    <img src="{{ rec.poster }}" alt="{{ rec.title }}"
+                        onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
+                    {% else %}
+                    <img src="https://via.placeholder.com/300x450?text=No+Poster" alt="{{ rec.title }}">
+                    {% endif %}
+                </div>
+                <div class="movie-info">
+                    <h3 class="movie-title">{{ rec.title }}</h3>
+                    <div class="movie-meta">
+                        <span>{{ rec.genre.split(',')[0] if rec.genre else 'N/A' }}</span>
+                        <div class="rating-badge">
+                            <i class="fa-solid fa-star"></i> {{ rec.rating }}/10
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="{{ url_for('movie_details', title=rec.title) }}" class="btn-play">
+                            <i class="fa-solid fa-play"></i> View
+                        </a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<style>
+    .movie-details-container {
+        padding: 2rem;
+    }
+
+    .movie-header {
+        display: flex;
+        gap: 3rem;
+        margin-bottom: 3rem;
+        background: var(--bg-card);
+        padding: 2rem;
+        border-radius: 10px;
+    }
+
+    .poster-wrapper {
+        flex-shrink: 0;
+    }
+
+    .movie-poster {
+        width: 300px;
+        height: auto;
+        border-radius: 8px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    }
+
+    .movie-header-info {
+        flex: 1;
+    }
+
+    .movie-title-large {
+        font-size: 2.5rem;
+        margin-bottom: 1rem;
+        color: white;
+    }
+
+    .movie-meta-details {
+        display: flex;
+        gap: 2rem;
+        margin-bottom: 1.5rem;
+        color: var(--text-secondary);
+    }
+
+    .movie-description {
+        color: var(--text-secondary);
+        line-height: 1.6;
+        margin-bottom: 1.5rem;
+    }
+
+    .watch-options {
+        margin: 1.5rem 0;
+    }
+
+    .services-list {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        margin-top: 0.5rem;
+    }
+
+    .service-badge {
+        background: var(--accent-color);
+        color: black;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        margin-top: 2rem;
+    }
+
+    .btn-primary {
+        background: var(--accent-color);
+        color: black;
+        padding: 0.8rem 1.5rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+
+    .btn-primary:hover {
+        transform: scale(1.05);
+    }
+
+    .btn-secondary {
+        background: var(--bg-card);
+        color: var(--accent-color);
+        padding: 0.8rem 1.5rem;
+        border: 2px solid var(--accent-color);
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .reviews-section {
+        background: var(--bg-card);
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 3rem;
+    }
+
+    .trailer-section {
+        background: var(--bg-card);
+        padding: 2rem;
+        border-radius: 10px;
+        margin-bottom: 3rem;
+    }
+
+    .review-form {
+        margin-bottom: 2rem;
+    }
+
+    .review-form textarea {
+        width: 100%;
+        background: var(--bg-input);
+        color: white;
+        padding: 1rem;
+        border: 1px solid var(--glass-border);
+        border-radius: 6px;
+        margin: 0.5rem 0;
+        font-family: inherit;
+    }
+
+    .review-form button {
+        background: var(--accent-color);
+        color: black;
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .reviews-list {
+        margin-top: 2rem;
+    }
+
+    .review-card {
+        background: var(--bg-input);
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 1rem;
+    }
+
+    .review-header {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.5rem;
+        font-size: 0.9rem;
+    }
+
+    .review-date {
+        color: var(--text-secondary);
+    }
+
+    .review-sentiment {
+        padding: 0.2rem 0.6rem;
+        border-radius: 4px;
+        color: white;
+        font-size: 0.8rem;
+        font-weight: 600;
+    }
+
+    .review-text {
+        color: var(--text-secondary);
+        line-height: 1.6;
+    }
+
+    .recommendations-section {
+        margin-top: 3rem;
+    }
+
+    .recommendations-section h2 {
+        margin-bottom: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .movie-header {
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .movie-title-large {
+            font-size: 1.8rem;
+        }
+
+        .movie-meta-details {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+    }
+</style>
+
+<script>
+    function submitReview(movieTitle) {
+        const reviewText = document.getElementById('reviewText').value;
+        if (!reviewText.trim()) {
+            alert('Please write a review');
+            return;
+        }
+
+        fetch('/submit_review', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                movie_title: movieTitle,
+                review: reviewText
+            })
+        }).then(response => response.json())
+            .then(data => {
+                document.getElementById('reviewText').value = '';
+                alert('Review submitted!');
+                location.reload();
+            });
+    }
+
+    function toggleWatchlist(title) {
+        fetch('/watchlist/add', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title: title })
+        }).then(response => response.json())
+            .then(data => {
+                // alert('Added to watchlist!'); 
+                location.reload();
+            });
+    }
+
+    function removeFromWatchlist(title) {
+        fetch('/watchlist/remove', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ title: title })
+        }).then(response => response.json())
+            .then(data => {
+                alert('Removed from watchlist!');
+                location.reload();
+            });
+    }
+
+    function toggleFavorite(title, btn) {
+        fetch('/favorites/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title: title })
+        })
+            .then(response => response.json())
+            .then(data => {
+                const icon = btn.querySelector('i');
+                if (data.action === 'added') {
+                    icon.classList.remove('fa-regular');
+                    icon.classList.add('fa-solid');
+                    icon.style.color = '#ef4444';
+                } else {
+                    icon.classList.remove('fa-solid');
+                    icon.classList.add('fa-regular');
+                    icon.style.color = '';
+                }
+            })
+            .catch(err => console.error(err));
+    }
+</script>
+{% endblock %}

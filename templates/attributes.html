@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block content %}
+<button onclick="window.history.back()" class="btn-back"
+    style="margin-bottom: 20px; background: transparent; color: var(--text-secondary); border: none; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 0;">
+    <i class="fa-solid fa-arrow-left"></i> Go Back
+</button>
+
+<div class="user-welcome" style="margin-bottom: 2rem;">
+    <h1>Attributes</h1>
+    <p>Explore movies by specific characteristics</p>
+</div>
+
+<div class="services-section">
+    <div class="services-grid"
+        style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px;">
+        <a href="{{ url_for('show_attribute', category='slow-paced') }}" class="service-card attribute-card"
+            style="background-image: url('{{ url_for('static', filename='images/slow.jpg') }}');">
+            <span>Slow-Paced</span>
+        </a>
+        <a href="{{ url_for('show_attribute', category='fast-paced') }}" class="service-card attribute-card"
+            style="background-image: url('{{ url_for('static', filename='images/fast.jpg') }}');">
+            <span>Fast-Paced</span>
+        </a>
+        <a href="{{ url_for('show_attribute', category='simple-plot') }}" class="service-card attribute-card"
+            style="background-image: url('{{ url_for('static', filename='images/simple.jpg') }}');">
+            <span>Simple Plot</span>
+        </a>
+        <a href="{{ url_for('show_attribute', category='complex-plot') }}" class="service-card attribute-card"
+            style="background-image: url('{{ url_for('static', filename='images/complex.jpg') }}');">
+            <span>Complex Plot</span>
+        </a>
+        <a href="{{ url_for('show_attribute', category='light-theme') }}" class="service-card attribute-card"
+            style="background-image: url('{{ url_for('static', filename='images/light.jpg') }}');">
+            <span>Light Theme</span>
+        </a>
+        <a href="{{ url_for('show_attribute', category='dark-theme') }}" class="service-card attribute-card"
+            style="background-image: url('{{ url_for('static', filename='images/dark.jpg') }}');">
+            <span>Dark Theme</span>
+        </a>
+        <a href="{{ url_for('show_attribute', category='watch-myself') }}" class="service-card attribute-card"
+            style="background-image: url('{{ url_for('static', filename='images/solo.jpg') }}');">
+            <span>Watch By Myself</span>
+        </a>
+        <a href="{{ url_for('show_attribute', category='watch-friends') }}" class="service-card attribute-card"
+            style="background-image: url('{{ url_for('static', filename='images/friends.jpg') }}');">
+            <span>Watch With Friends</span>
+        </a>
+    </div>
+</div>
+
+<style>
+    .attribute-card {
+        height: 150px;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        color: white;
+        font-weight: bold;
+        font-size: 1.1rem;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        overflow: hidden;
+        transition: transform 0.3s ease;
+    }
+
+    .attribute-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        transition: background 0.3s;
+    }
+
+    .attribute-card:hover::before {
+        background: rgba(0, 0, 0, 0.3);
+    }
+
+    .attribute-card:hover {
+        transform: scale(1.05);
+    }
+
+    .attribute-card span {
+        position: relative;
+        z-index: 1;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+    }
+</style>
+{% endblock %}

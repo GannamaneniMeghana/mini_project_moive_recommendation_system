@@ -1,0 +1,3 @@
+user_id,preferred_language,favorite_genre,watchlist_enabled,favorites_enabled,selected_platforms,optimization_enabled,notifications_enabled,dark_mode
+2,Spanish,Action,true,true,,true,true,false
+1,English,Action,true,true,"Netflix,Prime Video,Hulu,Disney+",true,false,true

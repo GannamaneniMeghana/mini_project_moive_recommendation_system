@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="dashboard">
+    <div style="margin-bottom: 2rem;">
+        <h2 style="color: var(--accent-color); font-size: 1.5rem;">Recently Reviewed</h2>
+    </div>
+
+    <!-- Movie Grid -->
+    <div class="movie-grid">
+        {% if movies %}
+            {% for movie in movies %}
+            <div class="movie-card">
+                <div class="poster-container">
+                    {% if movie.poster %}
+                    <img src="{{ movie.poster }}" alt="{{ movie.title }}" onerror="this.src='https://via.placeholder.com/300x450?text=No+Poster'">
+                    {% else %}
+                    <img src="https://via.placeholder.com/300x450?text=No+Poster" alt="{{ movie.title }}">
+                    {% endif %}
+                </div>
+                <div class="movie-info">
+                    <h3 class="movie-title">{{ movie.title }}</h3>
+                    <div class="movie-meta">
+                        <span>{{ movie.genre.split(',')[0] if movie.genre else 'N/A' }}</span>
+                        <div class="rating-badge">
+                            <i class="fa-solid fa-star"></i> {{ movie.rating }}/10
+                        </div>
+                    </div>
+                    <div class="card-actions">
+                        <a href="{{ url_for('movie_details', title=movie.title) }}" class="btn-play">
+                            <i class="fa-solid fa-play"></i> Details
+                        </a>
+                        <button class="btn-icon" onclick="toggleWatchlist('{{ movie.title }}')">
+                            <i class="fa-regular fa-heart"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        {% else %}
+        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+            <p style="color: var(--text-secondary); font-size: 1.1rem;">No recently reviewed movies</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+function toggleWatchlist(title) {
+    fetch('/watchlist/add', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({title: title})
+    }).then(response => response.json())
+    .then(data => {
+        alert('Added to watchlist!');
+    });
+}
+</script>
+{% endblock %}

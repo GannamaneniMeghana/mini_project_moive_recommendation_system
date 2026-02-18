@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<button onclick="window.history.back()" class="btn-back"
+    style="margin-bottom: 20px; background: transparent; color: var(--text-secondary); border: none; font-size: 1rem; display: flex; align-items: center; gap: 8px; cursor: pointer; padding: 0;">
+    <i class="fa-solid fa-arrow-left"></i> Go Back
+</button>
+<div class="user-welcome" style="margin-bottom: 2rem;">
+    <h1>Your Favorites</h1>
+    <p>Movies you love</p>
+    {% if movies %}
+    <div style="margin-top: 15px;">
+        <a href="{{ url_for('clear_favorites_action') }}" class="btn-danger-outline"
+            onclick="return confirm('Are you sure you want to clear your entire favorites list? This cannot be undone.');"
+            style="padding: 8px 16px; font-size: 0.9rem; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-trash"></i> Clear Favorites
+        </a>
+    </div>
+    {% endif %}
+</div>
+
+<!-- View Section -->
+<div class="view-section active">
+    <div class="movie-grid">
+        {% if movies %}
+        {% for movie in movies %}
+        <div class="movie-card-wrapper" style="position: relative;">
+            <a href="{{ url_for('movie_details', title=movie.title) }}" class="movie-card-link">
+                <div class="movie-card">
+                    <img src="{{ movie.poster }}" class="movie-poster" alt="{{ movie.title }}">
+                    <div class="movie-info">
+                        <h3>{{ movie.title }}</h3>
+                        <div class="movie-meta">
+                            <span>{{ movie.language }}</span>
+                            <span><i class="fa-solid fa-star" style="color: gold;"></i> {{ movie.rating
+                                }}/10</span>
+                        </div>
+                    </div>
+                </div>
+            </a>
+            <form action="{{ url_for('remove_from_favorites') }}" method="POST"
+                style="position: absolute; top: 10px; right: 10px; z-index: 10;">
+                <input type="hidden" name="title" value="{{ movie.title }}">
+                <button type="submit" class="fav-btn active"
+                    style="border: none; cursor: pointer; background: rgba(0,0,0,0.6); border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fa-solid fa-heart" style="color: #ef4444;"></i>
+                </button>
+            </form>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="empty-state" style="width: 100%; text-align: center; padding: 4rem;">
+            <p style="color: var(--text-secondary);">No favorite movies yet.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

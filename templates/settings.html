@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="settings-container">
+    <h1 class="section-heading" style="margin-bottom: 2rem;">Settings & Profile</h1>
+
+    <div class="settings-content">
+        <form action="{{ url_for('settings') }}" method="POST" class="settings-form">
+
+            <!-- 1. Profile -->
+            <div class="settings-section">
+                <h2><i class="fa-solid fa-user"></i> Profile</h2>
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" value="{{ current_user.username }}" disabled class="settings-input"
+                        style="opacity: 0.7; cursor: not-allowed;">
+                    <small style="color: var(--text-secondary); display: block; margin-top: 5px;">Username cannot be
+                        changed.</small>
+                </div>
+            </div>
+
+            <!-- 2. Security -->
+            <div class="settings-section">
+                <h2><i class="fa-solid fa-lock"></i> Security</h2>
+                <div class="form-group">
+                    <h3>Change Password</h3>
+                    <div class="form-group" style="margin-top: 15px;">
+                        <label>Current Password</label>
+                        <input type="password" name="current_password" class="settings-input"
+                            placeholder="Current Password">
+                    </div>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" name="new_password" class="settings-input" placeholder="New Password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm New Password</label>
+                        <input type="password" name="confirm_password" class="settings-input"
+                            placeholder="Confirm New Password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="submit" name="action" value="change_password" class="btn-primary-outline"
+                        style="margin-top: 10px;">
+                        <i class="fa-solid fa-key"></i> Update Password
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- Auto-save script -->
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    const form = document.querySelector('.settings-form');
+                    const inputs = form.querySelectorAll('input[type="checkbox"], input[type="radio"], select');
+
+                    inputs.forEach(input => {
+                        input.addEventListener('change', function () {
+                            form.submit();
+                        });
+                    });
+                });
+            </script>
+
+            <!-- 3. Subscriptions -->
+            <div class="settings-section">
+                <h2><i class="fa-solid fa-tv"></i> Subscriptions</h2>
+                <div class="form-group">
+                    <label style="margin-bottom: 10px; display: block;">Select OTT Platforms</label>
+                    <div class="checkbox-grid">
+                        {% set platforms = ['Netflix', 'Prime Video', 'Hulu', 'Disney+', 'Max', 'Apple TV+', 'Peacock',
+                        'Paramount+'] %}
+                        {% for platform in platforms %}
+                        <label class="checkbox-container">
+                            <input type="checkbox" name="selected_platforms" value="{{ platform }}" {% if platform in
+                                settings.selected_platforms %}checked{% endif %}>
+                            <span class="checkmark"></span>
+                            {{ platform }}
+                        </label>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="form-group row-group">
+                    <label>Enable Subscription Optimization</label>
+                    <label class="switch">
+                        <input type="checkbox" name="optimization_enabled" {% if settings.optimization_enabled=='true'
+                            %}checked{% endif %}>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+{% endblock %}
