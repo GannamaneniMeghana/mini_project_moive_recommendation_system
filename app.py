@@ -49,10 +49,8 @@ sentiment_model = pickle.load(open("sentiment_model.pkl", "rb"))
 sentiment_vectorizer = pickle.load(open("sentiment_vectorizer.pkl", "rb"))
 
 REVIEWS_FILE = "reviews.csv"
-REVIEWS_FILE = "reviews.csv"
 WATCHLIST_FILE = "watchlist.csv"
 FAVORITES_FILE = "favorites.csv"
-POSTER_CACHE_FILE = "posters.csv"
 POSTER_CACHE_FILE = "posters.csv"
 USERS_FILE = "users.csv"
 SETTINGS_FILE = "user_settings.csv"
@@ -91,7 +89,7 @@ def load_users():
                     users[row[0]] = User(row[0], row[1], row[2], security_question, security_answer)
     return users
 
-def save_user(username, password):
+def save_user(username, password, security_question=None, security_answer=None):
     users = load_users()
     for user in users.values():
         if user.username.lower() == username.lower():
@@ -100,18 +98,14 @@ def save_user(username, password):
     new_id = str(len(users) + 1)
     password_hash = generate_password_hash(password)
     
-    # Simple hashing for security answer for privacy (optional but good practice)
-    # We will store it in plain text for simplicity as per "mini project", or hash it? 
-    # Let's simple hash it to be consistent with password.
+    # Store security answer hash for privacy
     security_answer_hash = generate_password_hash(security_answer) if security_answer else None
     
     with open(USERS_FILE, "a", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        if os.path.getsize(USERS_FILE) == 0:
+        if os.path.exists(USERS_FILE) and os.path.getsize(USERS_FILE) == 0:
             writer.writerow(["id", "username", "password_hash", "security_question", "security_answer"])
         
-        # Check if file has old schema (handling append to old file) - Ideally migration should run first
-        # But for new saves:
         writer.writerow([new_id, username, password_hash, security_question, security_answer_hash])
     return True
 
@@ -412,8 +406,10 @@ def register():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
+        security_question = request.form.get("security_question")
+        security_answer = request.form.get("security_answer")
         
-        if save_user(username, password):
+        if save_user(username, password, security_question, security_answer):
             flash("Registration successful! Please login.", "success")
             return redirect(url_for("login"))
         else:
@@ -464,10 +460,6 @@ def google_auth():
         login_user(user)
         return redirect(url_for('home'))
         
-    except Exception as e:
-        flash(f"Google Login Failed: {str(e)}. Did you add the Client Secret?", "error")
-        return redirect(url_for('login'))
-
     except Exception as e:
         flash(f"Google Login Failed: {str(e)}. Did you add the Client Secret?", "error")
         return redirect(url_for('login'))
@@ -582,7 +574,6 @@ def logo():
         return redirect(url_for("home"))
     return render_template("logo.html")
 
-@app.route("/")
 @app.route("/index")
 @app.route("/home")
 @login_required 
@@ -921,7 +912,6 @@ def movie_details(title):
     
     rec_candidates = movies.iloc[sim_indices].copy()
     poster_map = fetch_posters_parallel(rec_candidates)
-    rec_candidates['poster'] = rec_candidates.index.map(poster_map)
     rec_candidates['poster'] = rec_candidates.index.map(poster_map)
     recommendations = rec_candidates[rec_candidates['poster'].notna()].head(5).to_dict(orient="records")
 
@@ -1296,32 +1286,19 @@ def remove_from_favorites():
 
 @app.context_processor
 def inject_context():
-    if not current_user.is_authenticated:
-        return dict(user_favorites=[], user_settings={})
-    
-    # Inject favorites for header hearts or such
+    user_settings = {}
     favs = []
-    # ... existing logic ...
-    
-    # Inject Settings
-    user_settings = load_user_settings(current_user.id)
-    return dict(user_settings=user_settings)
-
-@app.context_processor # Keeping the old one too if needed, but better merge
-def inject_favorites():
-    if not current_user.is_authenticated:
-        return dict(user_favorites=[])
-    
-    favs = []
-    if os.path.exists(FAVORITES_FILE):
-        try:
-            with open(FAVORITES_FILE, "r", encoding="utf-8") as f:
-                reader = csv.reader(f)
-                next(reader, None)
-                favs = [row[1] for row in reader if len(row) > 1 and row[0] == current_user.id]
-        except:
-            pass
-    return dict(user_favorites=favs)
+    if current_user.is_authenticated:
+        user_settings = load_user_settings(current_user.id)
+        if os.path.exists(FAVORITES_FILE):
+            try:
+                with open(FAVORITES_FILE, "r", encoding="utf-8") as f:
+                    reader = csv.reader(f)
+                    next(reader, None)
+                    favs = [row[1] for row in reader if len(row) > 1 and row[0] == current_user.id]
+            except:
+                pass
+    return dict(user_settings=user_settings, user_favorites=favs)
 
 @app.route("/recent")
 def recent_reviews():
@@ -1724,8 +1701,6 @@ def get_all_movies_from_all_sources():
                         })
             except Exception as e:
                 print(f"Error reading {filename}: {e}")
-
-    return all_movies
 
     return all_movies
 
