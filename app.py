@@ -13,6 +13,7 @@ import random
 import re
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
+import shutil
 
 app = Flask(__name__)
 load_dotenv('meg.env')
@@ -48,12 +49,26 @@ vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
 sentiment_model = pickle.load(open("sentiment_model.pkl", "rb"))
 sentiment_vectorizer = pickle.load(open("sentiment_vectorizer.pkl", "rb"))
 
-REVIEWS_FILE = "reviews.csv"
-WATCHLIST_FILE = "watchlist.csv"
-FAVORITES_FILE = "favorites.csv"
-POSTER_CACHE_FILE = "posters.csv"
-USERS_FILE = "users.csv"
-SETTINGS_FILE = "user_settings.csv"
+def get_writable_path(filename):
+    """Returns a writable path for Vercel (/tmp) while preserving project data if it exists."""
+    if os.environ.get('VERCEL') or os.environ.get('AWS_LAMBDA_FUNCTION_NAME'):
+        tmp_path = os.path.join('/tmp', filename)
+        # Copy from project root to /tmp if it doesn't exist in /tmp yet
+        if not os.path.exists(tmp_path) and os.path.exists(filename):
+            try:
+                shutil.copy2(filename, tmp_path)
+                print(f"Copied {filename} to {tmp_path}")
+            except Exception as e:
+                print(f"Error copying {filename} to /tmp: {e}")
+        return tmp_path
+    return filename
+
+REVIEWS_FILE = get_writable_path("reviews.csv")
+WATCHLIST_FILE = get_writable_path("watchlist.csv")
+FAVORITES_FILE = get_writable_path("favorites.csv")
+POSTER_CACHE_FILE = get_writable_path("posters.csv")
+USERS_FILE = get_writable_path("users.csv")
+SETTINGS_FILE = get_writable_path("user_settings.csv")
 API_KEY = "8e6f23ad"
 
 # Login Manager Setup
@@ -148,11 +163,11 @@ if not os.path.exists(REVIEWS_FILE):
         writer = csv.writer(f)
         writer.writerow(["movie_title", "review", "sentiment", "date", "rating"])
 
-# Migration check
-if os.path.exists("favorites.csv") and not os.path.exists(WATCHLIST_FILE):
+# Migration check (v1 to v2)
+if os.path.exists(FAVORITES_FILE) and not os.path.exists(WATCHLIST_FILE):
     try:
-        os.rename("favorites.csv", WATCHLIST_FILE)
-        print("Migrated favorites.csv to watchlist.csv")
+        shutil.copy2(FAVORITES_FILE, WATCHLIST_FILE)
+        print("Migrated data to watchlist.csv")
     except Exception as e:
         print(f"Error migrating favorites: {e}")
 
