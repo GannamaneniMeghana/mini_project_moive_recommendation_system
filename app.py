@@ -425,6 +425,9 @@ def social_login(provider):
     if provider.lower() == 'google':
         # Real Google Login
         redirect_uri = url_for('google_auth', _external=True)
+        # Force https if on production (Vercel)
+        if 'vercel.app' in redirect_uri or os.environ.get('VERCEL'):
+            redirect_uri = redirect_uri.replace('http://', 'https://')
         print(f"DEBUG: Sending redirect_uri: {redirect_uri}")
         return google.authorize_redirect(redirect_uri)
     
