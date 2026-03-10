@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_login import LoginManager, UserMixin, login_user, login_required, logout_user, current_user
 from werkzeug.security import generate_password_hash, check_password_hash
 import pandas as pd
@@ -146,7 +146,7 @@ def load_user(user_id):
 if not os.path.exists(REVIEWS_FILE):
     with open(REVIEWS_FILE, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
-        writer.writerow(["movie_title", "review", "sentiment", "date"])
+        writer.writerow(["movie_title", "review", "sentiment", "date", "rating"])
 
 # Migration check
 if os.path.exists("favorites.csv") and not os.path.exists(WATCHLIST_FILE):
@@ -879,12 +879,17 @@ def movie_details(title):
     # Get reviews
     reviews = []
     if os.path.exists(REVIEWS_FILE):
-        df = pd.read_csv(REVIEWS_FILE)
-        # Handle cases where rating might not exist yet
-        if 'rating' not in df.columns:
-            df['rating'] = None
-            
-        reviews = df[df['movie_title'] == title].to_dict(orient="records")
+        try:
+            df = pd.read_csv(REVIEWS_FILE, on_bad_lines='skip')
+            # Handle cases where columns might not exist yet
+            if 'rating' not in df.columns:
+                df['rating'] = None
+            if 'movie_title' in df.columns:
+                reviews = df[df['movie_title'] == title].to_dict(orient="records")
+        except Exception as e:
+            print(f"Error reading reviews: {e}")
+            reviews = []
+        
         # Sort reviews by date desc if possible, or just reverse
         reviews.reverse()
 
@@ -923,48 +928,40 @@ def movie_details(title):
 @app.route("/submit_review", methods=["POST"])
 @login_required
 def submit_review():
-    movie_title = request.form.get("movie_title")
-    review_text = request.form.get("review")
-    rating = request.form.get("rating") # New rating field
+    data = request.get_json()
+    if not data:
+        return jsonify({"status": "error", "message": "No data provided"}), 400
+        
+    movie_title = data.get("movie_title")
+    review_text = data.get("review")
+    rating = data.get("rating")
     
     if not movie_title or not review_text:
-        flash("Missing data", "error")
-        return redirect(url_for("movie_details", title=movie_title))
+        return jsonify({"status": "error", "message": "Missing movie title or review text"}), 400
     
     # Ensure items exist in reviews file header if creating new
     if not os.path.exists(REVIEWS_FILE):
         with open(REVIEWS_FILE, "w", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
-            writer.writerow(["movie_title", "review", "sentiment", "date", "rating"]) # Added rating
+            writer.writerow(["movie_title", "review", "sentiment", "date", "rating"])
 
     vec = sentiment_vectorizer.transform([review_text])
     pred = sentiment_model.predict(vec)[0]
 
     try:
-        # Check current header to see if we need to append rating or if column exists
-        header = []
-        with open(REVIEWS_FILE, "r", encoding="utf-8") as f:
-             reader = csv.reader(f)
-             header = next(reader, [])
-        
-        # If 'rating' not in header, we might have an issue appending plainly, 
-        # but for simplicity in this project we just append. 
-        # Ideally we would migrate the CSV.
-        
         with open(REVIEWS_FILE, "a", newline="", encoding="utf-8") as f:
             writer = csv.writer(f)
-            # If the file was created by us just now, it has rating.
-            # If existing file doesn't have rating column, this append will effectively add it as 5th col.
-            # Read logic handles missing col by defaulting to None.
             writer.writerow([movie_title, review_text, pred, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), rating])
             
     except Exception as e:
         print(f"Error saving review: {e}")
-        flash("Error saving review", "error")
-        return redirect(url_for("movie_details", title=movie_title))
+        return jsonify({"status": "error", "message": "Error saving review"}), 500
 
-    flash(f"Review submitted! Sentiment: {pred}", "success")
-    return redirect(url_for("movie_details", title=movie_title))
+    return jsonify({
+        "status": "success",
+        "message": "Review submitted successfully",
+        "sentiment": str(pred)
+    })
 
 # --- Subscription Optimization Logic ---
 SUBSCRIPTION_PRICES = {

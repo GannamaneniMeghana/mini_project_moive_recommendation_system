@@ -86,25 +86,38 @@
         <div class="review-form">
             <h3>Write a Review</h3>
             <textarea id="reviewText" placeholder="Share your thoughts about this movie..." rows="4"></textarea>
+            <div id="reviewFeedback" class="review-feedback"
+                style="display: none; margin-bottom: 10px; padding: 10px; border-radius: 6px;"></div>
             <button onclick="submitReview('{{ movie.title }}')">Submit Review</button>
         </div>
 
         <!-- Recent Reviews -->
         {% if reviews %}
         <div class="reviews-list">
-            <h3>Recent Reviews</h3>
-            {% for review in reviews %}
-            <div class="review-card">
-                <div class="review-header">
-                    <span class="review-date">{{ review.date }}</span>
-                    <span class="review-sentiment"
-                        style="background: {% if review.sentiment == 'positive' %}#4ade80{% else %}#ef4444{% endif %};">
-                        {{ review.sentiment|upper }}
-                    </span>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3>Recent Reviews</h3>
+                <div class="sentiment-filters">
+                    <button class="filter-btn active" onclick="filterReviews('all')">All</button>
+                    <button class="filter-btn" onclick="filterReviews('positive')">Positive</button>
+                    <button class="filter-btn" onclick="filterReviews('neutral')">Neutral</button>
+                    <button class="filter-btn" onclick="filterReviews('negative')">Negative</button>
                 </div>
-                <p class="review-text">{{ review.review }}</p>
             </div>
-            {% endfor %}
+            <div id="reviewsContainer">
+                {% for review in reviews %}
+                <div class="review-card" data-sentiment="{{ review.sentiment }}">
+                    <div class="review-header">
+                        <span class="review-date">{{ review.date }}</span>
+                        <span class="review-sentiment"
+                            style="background: {% if review.sentiment == 'positive' %}#4ade80{% elif review.sentiment == 'neutral' %}#facc15{% else %}#ef4444{% endif %};">
+                            {{ review.sentiment|upper }}
+                        </span>
+                    </div>
+                    <p class="review-text">{{ review.review }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            <p id="noReviewsMessage" style="display: none; text-align: center; color: var(--text-secondary); padding: 20px;">No reviews found for this sentiment.</p>
         </div>
         {% endif %}
     </div>
@@ -342,13 +355,55 @@
             gap: 0.5rem;
         }
     }
+
+    .review-feedback.success {
+        background: #4ade8022;
+        border: 1px solid #4ade80;
+        color: #4ade80;
+    }
+
+    .review-feedback.error {
+        background: #ef444422;
+        border: 1px solid #ef4444;
+        color: #ef4444;
+    }
+    .sentiment-filters {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .filter-btn {
+        background: var(--bg-input);
+        color: var(--text-secondary);
+        border: 1px solid var(--glass-border);
+        padding: 0.4rem 0.8rem;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        transition: all 0.3s ease;
+    }
+
+    .filter-btn:hover {
+        border-color: var(--accent-color);
+        color: white;
+    }
+
+    .filter-btn.active {
+        background: var(--accent-color);
+        color: black;
+        border-color: var(--accent-color);
+    }
 </style>
 
 <script>
     function submitReview(movieTitle) {
         const reviewText = document.getElementById('reviewText').value;
+        const feedbackDiv = document.getElementById('reviewFeedback');
+
         if (!reviewText.trim()) {
-            alert('Please write a review');
+            feedbackDiv.textContent = 'Please write a review';
+            feedbackDiv.className = 'review-feedback error';
+            feedbackDiv.style.display = 'block';
             return;
         }
 
@@ -363,9 +418,26 @@
             })
         }).then(response => response.json())
             .then(data => {
-                document.getElementById('reviewText').value = '';
-                alert('Review submitted!');
-                location.reload();
+                if (data.status === 'success') {
+                    document.getElementById('reviewText').value = '';
+                    feedbackDiv.textContent = `Review submitted! Sentiment: ${data.sentiment.toUpperCase()}`;
+                    feedbackDiv.className = 'review-feedback success';
+                    feedbackDiv.style.display = 'block';
+
+                    setTimeout(() => {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    feedbackDiv.textContent = 'Error: ' + data.message;
+                    feedbackDiv.className = 'review-feedback error';
+                    feedbackDiv.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                feedbackDiv.textContent = 'An error occurred while submitting your review.';
+                feedbackDiv.className = 'review-feedback error';
+                feedbackDiv.style.display = 'block';
             });
     }
 
@@ -417,6 +489,37 @@
                 }
             })
             .catch(err => console.error(err));
+    }
+
+    function filterReviews(sentiment) {
+        // Update buttons
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+            if (btn.innerText.toLowerCase() === sentiment.toLowerCase()) {
+                btn.classList.add('active');
+            }
+        });
+
+        // Filter cards
+        const cards = document.querySelectorAll('.review-card');
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+            if (sentiment === 'all' || card.getAttribute('data-sentiment') === sentiment) {
+                card.style.display = 'block';
+                visibleCount++;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        // Show/hide no reviews message
+        const message = document.getElementById('noReviewsMessage');
+        if (visibleCount === 0) {
+            message.style.display = 'block';
+        } else {
+            message.style.display = 'none';
+        }
     }
 </script>
 {% endblock %}

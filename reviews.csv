@@ -1,4 +1,9 @@
-movie_title,review,sentiment,date
-Lakshmi,good movie,neutral,2025-12-02 20:46:40
-Rule,Outstanding cinematography and acting,positive,2025-12-03 17:04:47
-
+movie_title,review,sentiment,date,rating
+Lakshmi,good movie,positive,2025-12-02 20:46:40,
+Rule,Outstanding cinematography and acting,positive,2025-12-03 17:04:47,
+Premalu,nice comdey timing ,neutral,2026-03-05 19:14:39,
+Premalu,nice movie,positive,2026-03-05 19:22:06,
+Premalu,execllent movie,positive,2026-03-05 19:23:03,
+Animal,Incredible direction and screenplay,positive,2026-03-05 19:25:44,
+Brindaavanam,nice,neutral,2026-03-10 15:04:30,
+Brindaavanam,excellent movie,positive,2026-03-10 19:12:01,
