@@ -1,173 +1,237 @@
-# 🎬 Movie Recommendation System
+# 🎬 Movie Recommendation & Review System
 
-A content-based movie recommendation system built with Python and Machine Learning that suggests similar movies based on a user's selection.
+## 📌 Introduction
 
----
-
-## 📌 Table of Contents
-
-- [Overview](#overview)
-- [Features](#features)
-- [Tech Stack](#tech-stack)
-- [Dataset](#dataset)
-- [How It Works](#how-it-works)
-- [Project Structure](#project-structure)
-- [Installation](#installation)
-- [Usage](#usage)
-- [Screenshots](#screenshots)
-- [Future Enhancements](#future-enhancements)
-- [Author](#author)
+This project is a **Flask-based web application** that provides personalized movie recommendations, user authentication, sentiment analysis on reviews, and watchlist/favorites management. It combines **machine learning models** with a user-friendly interface to deliver an interactive movie discovery experience.
 
 ---
 
-## 📖 Overview
+## 📂 Table of Contents
 
-This mini project implements a **Content-Based Movie Recommendation System** that recommends movies similar to a user-selected movie. The system analyzes movie metadata (genres, cast, crew, keywords, overview) and uses **cosine similarity** on vectorized features to find and rank the most similar movies.
-
----
-
-## ✨ Features
-
-- 🔍 Search for any movie by title
-- 🎯 Get top N similar movie recommendations
-- 📊 Uses TF-IDF / CountVectorizer for feature extraction
-- 📐 Cosine Similarity for measuring movie likeness
-- 🖥️ Simple and interactive user interface
-
----
-
-## 🛠️ Tech Stack
-
-| Technology | Purpose |
-|---|---|
-| Python 3.x | Core programming language |
-| Pandas | Data manipulation |
-| NumPy | Numerical computations |
-| Scikit-learn | Vectorization & similarity computation |
-| NLTK | Text preprocessing / stemming |
-| Streamlit / Flask | Web application interface |
-| Jupyter Notebook | Exploratory data analysis & model building |
+* [Features](#-features)
+* [Tech Stack](#-tech-stack)
+* [Project Structure](#-project-structure)
+* [Installation](#-installation)
+* [Usage](#-usage)
+* [Configuration](#-configuration)
+* [Machine Learning Models](#-machine-learning-models)
+* [Datasets](#-datasets)
+* [API Integration](#-api-integration)
+* [Troubleshooting](#-troubleshooting)
+* [Contributors](#-contributors)
+* [License](#-license)
 
 ---
 
-## 📂 Dataset
+## 🚀 Features
 
-The project uses the **TMDB 5000 Movie Dataset** available on [Kaggle](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata), which includes:
-
-- `tmdb_5000_movies.csv` — Movie metadata (title, genres, keywords, overview, etc.)
-- `tmdb_5000_credits.csv` — Cast and crew information
-
----
-
-## ⚙️ How It Works
-
-1. **Data Preprocessing**
-   - Merge movies and credits datasets on movie title
-   - Extract relevant features: genres, keywords, cast, crew (director), and overview
-   - Convert list-based JSON columns to plain text tags
-
-2. **Feature Engineering**
-   - Combine all features into a single `tags` column
-   - Apply stemming to normalize words
-   - Vectorize the tags using `CountVectorizer` (Bag of Words)
-
-3. **Similarity Computation**
-   - Compute **Cosine Similarity** between all movie vectors
-   - Store the similarity matrix for fast lookup
-
-4. **Recommendation**
-   - Given an input movie, retrieve its index
-   - Sort all movies by cosine similarity score
-   - Return the top N most similar movies
+* 🔐 User authentication (Email + Google OAuth)
+* 🎥 Movie recommendation system (content-based filtering)
+* 💬 Sentiment analysis on user reviews
+* ⭐ Favorites & Watchlist management
+* 🖼️ Movie poster fetching & caching
+* 📊 Multiple streaming platform datasets (Netflix, Amazon Prime, etc.)
+* ⚡ Optimized performance with pre-trained models
 
 ---
 
-## 🗂️ Project Structure
+## 🧰 Tech Stack
+
+* **Backend:** Flask (Python)
+* **Frontend:** HTML, CSS (templates assumed)
+* **Machine Learning:** Scikit-learn
+* **Data Handling:** Pandas
+* **Authentication:** Flask-Login + OAuth (Google)
+* **Other Tools:** dotenv, requests
+
+---
+
+## 📁 Project Structure
 
 ```
-mini_project_movie_recommendation_system/
-│
-├── data/
-│   ├── tmdb_5000_movies.csv
-│   └── tmdb_5000_credits.csv
-│
-├── model/
-│   ├── movie_list.pkl          # Processed movie data
-│   └── similarity.pkl          # Precomputed similarity matrix
-│
-├── app.py                      # Main application (Streamlit/Flask)
-├── movie_recommendation.ipynb  # Jupyter Notebook (EDA + model building)
-├── requirements.txt            # Project dependencies
-└── README.md
+Mini_project_movie_/
+│── app.py                     # Main Flask application
+│── train_recommender.py       # Script to train recommendation model
+│── train_sentiment.py         # Script to train sentiment model
+│── fetch_posters.py           # Poster fetching utility
+│── recommender_model.pkl      # Trained recommendation model
+│── sentiment_model.pkl        # Trained sentiment model
+│── vectorizer.pkl             # TF-IDF vectorizer
+│── sentiment_vectorizer.pkl   # Sentiment vectorizer
+│── movie.csv                  # Main movie dataset
+│── users.csv                  # User data
+│── reviews.csv                # User reviews
+│── watchlist.csv              # Watchlist storage
+│── favorites.csv              # Favorites storage
+│── posters.csv                # Cached posters
+│── requirements.txt           # Dependencies
+│── Procfile                   # Deployment config
+│── meg.env                    # Environment variables
 ```
 
 ---
 
-## 🚀 Installation
+## ⚙️ Installation
 
-### Prerequisites
+### 1. Clone the Repository
 
-- Python 3.7 or higher
-- pip
+```bash
+git clone <repository-url>
+cd Mini_project_movie_
+```
 
-### Steps
+### 2. Create Virtual Environment
 
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/GannamaneniMeghana/mini_project_moive_recommendation_system.git
-   cd mini_project_moive_recommendation_system
-   ```
+```bash
+python -m venv venv
+source venv/bin/activate   # Linux/Mac
+venv\Scripts\activate      # Windows
+```
 
-2. **Install dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
+### 3. Install Dependencies
 
-3. **Download the dataset**
-   - Download `tmdb_5000_movies.csv` and `tmdb_5000_credits.csv` from [Kaggle](https://www.kaggle.com/datasets/tmdb/tmdb-movie-metadata)
-   - Place both files inside the `data/` folder
-
-4. **Run the Jupyter Notebook** *(to generate model files)*
-   ```bash
-   jupyter notebook movie_recommendation.ipynb
-   ```
-   Run all cells to generate `movie_list.pkl` and `similarity.pkl` inside the `model/` directory.
-
-5. **Launch the app**
-   ```bash
-   streamlit run app.py
-   ```
-   Then open your browser at `http://localhost:8501`
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
-## 🎮 Usage
+## ▶️ Usage
 
-1. Open the web app in your browser
-2. Select or type a movie name from the dropdown
-3. Click **"Recommend"**
-4. View the list of top recommended movies similar to your selection
+### Run the Application
+
+```bash
+python app.py
+```
+
+Or (Windows):
+
+```bash
+run_server.bat
+```
+
+Then open:
+
+```
+http://127.0.0.1:5000/
+```
 
 ---
 
-## 🔮 Future Enhancements
+## 🔧 Configuration
 
-- [ ] Add **Collaborative Filtering** for personalized recommendations
-- [ ] Integrate **TMDB API** to fetch real-time movie posters and ratings
-- [ ] Implement a **Hybrid Recommendation System** (content + collaborative)
-- [ ] Add user login and watch history tracking
-- [ ] Deploy on **Heroku** / **Streamlit Cloud**
+Create a `.env` file (or use `meg.env`) with:
+
+```
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
+```
+
+Also update:
+
+* `API_KEY` (movie poster API)
+* `SECRET_KEY` (Flask security)
 
 ---
 
-## 👩‍💻 Author
+## 🤖 Machine Learning Models
 
-**Gannamaneni Meghana**
+### 1. Recommendation System
 
-- GitHub: [@GannamaneniMeghana](https://github.com/GannamaneniMeghana)
+* Uses **TF-IDF Vectorization**
+* Computes **cosine similarity** between movies
+* Stored in:
+
+  * `recommender_model.pkl`
+  * `vectorizer.pkl`
+
+### 2. Sentiment Analysis
+
+* Classifies reviews as positive/negative
+* Stored in:
+
+  * `sentiment_model.pkl`
+  * `sentiment_vectorizer.pkl`
+
+---
+
+## 📊 Datasets
+
+The project uses multiple datasets:
+
+* `movie.csv` (primary dataset)
+* Streaming platform datasets:
+
+  * Netflix
+  * Amazon Prime
+  * Disney+
+  * Hulu
+  * Peacock
+  * Paramount+
+
+---
+
+## 🌐 API Integration
+
+* Movie poster fetching via external API
+* Cached locally in `posters.csv` for performance
+
+---
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+* **Module not found**
+  → Run `pip install -r requirements.txt`
+
+* **OAuth not working**
+  → Check `.env` credentials
+
+* **CSV errors**
+  → Run:
+
+  ```bash
+  python fix_csv.py
+  ```
+
+* **Model issues**
+  → Retrain models:
+
+  ```bash
+  python train_recommender.py
+  python train_sentiment.py
+  ```
+
+---
+
+## 👥 Contributors
+
+* Project developed as a **Mini Project (Movie Recommendation System)**
+  *(Add your team members here)*
 
 ---
 
 ## 📄 License
 
-This project is open-source and available under the [MIT License](LICENSE).
+This project is licensed under the MIT License (or specify your license).
+
+---
+
+## 💡 Future Improvements
+
+* Deploy to cloud (Heroku/AWS)
+* Add collaborative filtering
+* Improve UI/UX
+* Add real-time recommendations
+* Integrate more APIs (IMDb, TMDb)
+
+---
+
+## 📬 Contact
+
+For questions or contributions, feel free to reach out.
+
+---
+
+✨ *Enjoy discovering your next favorite movie!* 🎥
